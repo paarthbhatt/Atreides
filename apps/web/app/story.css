@@ -1,0 +1,148 @@
+.proof-flow,
+.architecture-flow {
+  min-height: 150svh;
+  position: relative;
+}
+
+.story-progress,
+.architecture-status {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  font: 500 9px "DM Mono", monospace;
+  justify-content: space-between;
+  letter-spacing: .13em;
+  margin-bottom: 16px;
+}
+
+.story-progress b,
+.architecture-status b {
+  color: var(--lime);
+  font-weight: 500;
+}
+
+.replay {
+  position: sticky;
+  top: 11svh;
+}
+
+.replay-steps {
+  position: relative;
+}
+
+.replay-rail {
+  background: rgba(233, 233, 226, .12);
+  bottom: 32px;
+  left: 27px;
+  position: absolute;
+  top: 32px;
+  width: 1px;
+}
+
+.replay-rail i {
+  background: linear-gradient(var(--lime), var(--red));
+  box-shadow: 0 0 16px rgba(210, 251, 98, .65);
+  display: block;
+  height: 100%;
+  transform: scaleY(var(--progress));
+  transform-origin: top;
+  transition: transform .12s linear;
+  width: 1px;
+}
+
+.replay-steps button {
+  position: relative;
+  z-index: 1;
+}
+
+.replay-steps button.complete {
+  color: #c5c5bb;
+}
+
+.replay-steps button.complete i {
+  background: rgba(210, 251, 98, .3);
+  border-color: var(--lime);
+}
+
+.architecture-flow {
+  min-height: 130svh;
+}
+
+.system-viewport {
+  overflow: hidden;
+  position: sticky;
+  top: 17svh;
+}
+
+.system {
+  --architecture-progress: 0;
+  min-width: 122%;
+  transform: translate3d(calc(var(--architecture-progress) * -18%), 0, 0);
+  transition: transform .12s linear;
+}
+
+.system-node {
+  opacity: .42;
+  transform: translateY(9px);
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+.system-node.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.system-node.active small,
+.system-node.active b {
+  color: var(--lime);
+}
+
+.system-node.decisive.active {
+  text-shadow: 0 0 22px rgba(210, 251, 98, .2);
+}
+
+.wire {
+  opacity: .24;
+  transition: color .35s ease, opacity .35s ease;
+}
+
+.wire.active {
+  color: var(--lime);
+  opacity: 1;
+  text-shadow: 0 0 15px rgba(210, 251, 98, .55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .replay-rail i,
+  .system,
+  .system-node,
+  .wire {
+    transition: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .proof-flow,
+  .architecture-flow {
+    min-height: auto;
+  }
+
+  .replay,
+  .system-viewport {
+    position: relative;
+    top: auto;
+  }
+
+  .replay-rail {
+    left: 26px;
+  }
+
+  .system-viewport {
+    overflow: visible;
+  }
+
+  .system {
+    min-width: 0;
+    transform: none;
+  }
+}
