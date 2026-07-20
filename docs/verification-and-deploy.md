@@ -9,6 +9,7 @@ npm install
 npm run typecheck
 npm run lint
 npm run test --workspace=@atreides/gateway
+npm run build --workspace=@atreides/sdk
 npm run build --workspace=@atreides/web
 ```
 
@@ -41,6 +42,14 @@ Inspect the ledger:
 curl http://localhost:4100/v1/receipts
 ```
 
+To enable local durable and signed receipts, set the values in `.env.example` in your shell, then run the gateway and verify the resulting chain:
+
+```powershell
+$env:ATREIDES_RECEIPT_PATH = ".atreides/receipts.jsonl"
+$env:ATREIDES_RECEIPT_SIGNING_KEY = "local-development-only"
+npm run cli --workspace=@atreides/gateway -- receipt verify
+```
+
 Open `http://localhost:3000` and verify the product page renders.
 
 ## Container verification
@@ -66,8 +75,9 @@ The workflow is deliberately deployment-target-neutral. Configure a protected de
 - [ ] README quick start matches tested commands on a clean clone.
 - [ ] Gateway test, root typecheck, and web build pass on the final commit.
 - [ ] Record the exact command output/date in the release or submission notes.
-- [ ] Confirm the public deployment does not expose a privileged evaluation endpoint without access controls.
+- [ ] Configure `ATREIDES_API_TOKEN` before exposing the privileged evaluation endpoints publicly.
+- [ ] Configure a non-local receipt store and managed signing key before making auditability claims.
 
 ## Deployment boundary
 
-Docker Compose is suitable for the demonstration. A production deployment is out of scope: it would require authenticated clients, transport encryption, persistent encrypted receipts, identity-aware authorization, rate limits, secrets management, and an inline enforcement proxy. Do not represent the current in-memory ledger as durable audit storage.
+Docker Compose is suitable for the demonstration. The gateway now supports optional bearer authentication, rate limits, local persisted receipts, and HMAC signatures, but a production deployment still needs TLS/mTLS, identity-aware authorization, managed secrets, encrypted append-only storage, observability, and an enforced traffic path. See [production-path.md](production-path.md).

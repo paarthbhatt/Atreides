@@ -23,6 +23,16 @@ test("serves health, evaluates the safe attack fixture, and exposes its receipt"
     assert.equal(ledger.status, 200);
     const body = await ledger.json() as { receipts: Array<{ id: string }> };
     assert.ok(body.receipts.some((item) => item.id === receipt.id));
+
+    const previousToken = process.env.ATREIDES_API_TOKEN;
+    process.env.ATREIDES_API_TOKEN = "test-token";
+    try {
+      assert.equal((await fetch(`${baseUrl}/v1/evaluate`, { method: "POST", body: JSON.stringify({ tool: "workspace.readme", context: [] }) })).status, 401);
+      assert.equal((await fetch(`${baseUrl}/v1/evaluate`, { method: "POST", headers: { authorization: "Bearer test-token" }, body: JSON.stringify({ tool: "workspace.readme", context: [] }) })).status, 200);
+    } finally {
+      if (previousToken === undefined) delete process.env.ATREIDES_API_TOKEN;
+      else process.env.ATREIDES_API_TOKEN = previousToken;
+    }
   } finally {
     await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   }

@@ -2,11 +2,11 @@
 
 > **Proof-carrying MCP security for AI agents.**
 
-Atreides is a developer-focused security gateway that tracks the path from untrusted context to an MCP action, evaluates deterministic policy, and produces a hash-chained trust receipt. Its controlled wrapped-tool demo enforces that decision before fixture execution. It is a safe local demonstration of indirect prompt injection attempting to exfiltrate fake secret-labelled data.
+Atreides is a developer-focused security gateway that tracks the path from untrusted context to an MCP action, evaluates deterministic policy, and produces a signed, hash-chained trust receipt. It can broker configured upstream stdio MCP tools, enforcing policy before an allowed tool call is forwarded. The included demo safely recreates an indirect prompt-injection attempt to exfiltrate fake secret-labelled data.
 
 Instead of deciding whether text *looks* malicious, Atreides asks whether a specific provenance can authorize a specific capability on specific data for a specific destination. The result is explainable: a decision, named policy, reason, and receipt—not a model confidence score.
 
-> **Prototype scope:** Atreides is a working pre-execution evaluator with controlled wrapped-tool enforcement. It is not an inline proxy for arbitrary third-party MCP servers. See [Security boundaries](#security-boundaries) for the exact boundary.
+> **Prototype scope:** Atreides brokers configured stdio upstream MCP servers through a generic discovery-and-invocation boundary. It is not yet a transparent drop-in transport proxy for every MCP transport or a complete production control plane. See [Security boundaries](#security-boundaries) for the exact boundary.
 
 ## What makes it different
 
@@ -32,9 +32,10 @@ flowchart LR
 ## Product highlights
 
 - **Provenance-aware decisions** across trust level, data sensitivity, destination, and write impact.
-- **MCP-compatible tooling** through a real local stdio MCP server.
-- **Pre-execution enforcement** for controlled fixtures, including blocked secret reads and egress.
-- **Auditable trust receipts** with a named policy, readable reason, prior hash, and SHA-256 receipt hash.
+- **Upstream MCP broker** — discovers configured stdio upstream tools and forwards only policy-allowed calls.
+- **Policy-as-code** — a versioned JSON policy bundle with CLI validation and an inspectable active policy endpoint.
+- **Pre-execution enforcement** for controlled fixtures and configured upstream MCP tools, including blocked secret reads and egress.
+- **Auditable trust receipts** with a named policy, readable reason, policy version, prior hash, SHA-256 receipt hash, and optional HMAC signature.
 - **Safe red-team replay** using only local fake data and `attacker.invalid`; it never contacts an external service.
 - **A deliberate product experience** with an immersive, progressively enhanced WebGL visual system and operator-console narrative.
 
@@ -86,6 +87,33 @@ Atreides also exposes the policy evaluator as a real stdio MCP tool:
 
 The server exposes `evaluate_agent_action` for a proposed action and `invoke_atreides_wrapped_tool` for the controlled policy-wrapped fixtures. The latter evaluates policy before it invokes a fixture tool. See [MCP integration](docs/mcp-integration.md) for exact schemas, sample payloads, and the enforcement boundary.
 
+When `ATREIDES_UPSTREAM_COMMAND` is configured, Atreides additionally exposes `list_atreides_upstream_tools` and `invoke_atreides_upstream_tool`. The latter discovers the named upstream tool, evaluates policy, and only then calls the upstream stdio server.
+
+## Developer workflow
+
+The checked-in policy template is [apps/gateway/policies/default.json](apps/gateway/policies/default.json). Point the gateway at a versioned policy bundle:
+
+```powershell
+$env:ATREIDES_POLICY_PATH="policies/default.json"
+npm run cli --workspace=@atreides/gateway -- policy validate policies/default.json
+npm run cli --workspace=@atreides/gateway -- policy show
+```
+
+For local durable, signed receipts, set `ATREIDES_RECEIPT_PATH` and `ATREIDES_RECEIPT_SIGNING_KEY` from [.env.example](.env.example), then use:
+
+```bash
+npm run cli --workspace=@atreides/gateway -- receipt verify
+```
+
+The workspace SDK provides a typed HTTP client:
+
+```ts
+import { createAtreidesClient } from "@atreides/sdk";
+
+const atreides = createAtreidesClient({ baseUrl: "http://localhost:4100", token: process.env.ATREIDES_API_TOKEN });
+const receipt = await atreides.evaluate(action);
+```
+
 ## Policy decisions
 
 | Condition | Decision | Policy |
@@ -103,6 +131,7 @@ The controlled demo's approved destinations are `internal://diagnostics` and `ht
 - `GET /v1/receipts` — append-only in-memory receipt ledger
 - `POST /v1/demo/indirect-prompt-injection` — safe red-team fixture
 - `POST /v1/evaluate` — evaluate an action payload
+- `GET /v1/policy` — active versioned policy bundle
 
 ## Verification
 
@@ -131,11 +160,11 @@ The stack exposes the web experience on port `3000` and the gateway on port `410
 
 Atreides intentionally makes conservative claims about the current implementation:
 
-- It evaluates proposed actions and creates in-memory, hash-chained receipts.
-- It enforces policy before **controlled wrapped fixture** execution.
-- It does **not** proxy arbitrary upstream MCP servers yet.
-- It does **not** prevent an agent from bypassing the policy tool or API.
-- It does **not** include durable storage, authentication, authorization, rate limiting, or production secrets management.
+- It evaluates proposed actions and can persist HMAC-signed, hash-chained receipts when configured.
+- It enforces policy before controlled fixtures and configured **stdio upstream MCP** tool execution.
+- It does **not** yet offer transparent proxying for arbitrary MCP transports or prevent an agent from bypassing Atreides entirely.
+- Optional bearer-token authentication and per-IP rate limiting are included for the HTTP API; identity-aware authorization, mTLS, and a managed secrets system remain deployment responsibilities.
+- Durable receipts are local JSONL for this prototype. Production deployments need an encrypted, access-controlled append-only store and managed signing keys.
 
 A production implementation would require an inline enforcement boundary, authenticated identities, transport security, encrypted durable audit storage, rate controls, key management, and monitoring.
 

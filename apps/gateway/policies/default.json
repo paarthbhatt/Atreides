@@ -1,0 +1,11 @@
+{
+  "version": "2026.07.1",
+  "approvedDestinations": ["internal://diagnostics", "https://api.example.internal"],
+  "rules": [
+    { "id": "atreides/no-untrusted-secret-read", "decision": "block", "reason": "Untrusted context cannot authorize a secret-read capability.", "match": { "untrusted": true, "tools": ["filesystem.read_secret"] } },
+    { "id": "atreides/no-untrusted-secret-egress", "decision": "block", "reason": "Untrusted context cannot authorize transmission of secret-labelled data to an unapproved destination.", "match": { "untrusted": true, "secret": true, "destination": "external" } },
+    { "id": "atreides/untrusted-high-impact-action", "decision": "approval_required", "reason": "Untrusted context reached a high-impact capability; explicit human approval is required.", "match": { "untrusted": true, "writes": true } },
+    { "id": "atreides/untrusted-external-action", "decision": "approval_required", "reason": "Untrusted context reached an unapproved destination; explicit human approval is required.", "match": { "untrusted": true, "destination": "external" } },
+    { "id": "atreides/default-allow", "decision": "allow", "reason": "No protected capability crosses an untrusted boundary.", "match": {} }
+  ]
+}

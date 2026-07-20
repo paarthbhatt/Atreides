@@ -3,6 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/web/package.json apps/web/package.json
 COPY apps/gateway/package.json apps/gateway/package.json
+COPY packages/sdk/package.json packages/sdk/package.json
 RUN npm ci --workspace=@atreides/web --include-workspace-root
 
 FROM dependencies AS build

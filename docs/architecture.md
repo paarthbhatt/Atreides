@@ -1,11 +1,11 @@
 # Architecture
 
 ```text
-MCP client / agent → Atreides stdio MCP server → policy evaluation → controlled fixture tool
+MCP client / agent → Atreides stdio MCP broker → policy evaluation → configured upstream MCP tool
                                       ↓
-                           hash-chained trust receipt → operator console
+                         signed hash-chained trust receipt → operator console / ledger
 ```
 
 Each action carries context envelopes: source, trust level, sensitivity, and content hash. The gateway evaluates the requested tool, destination, write impact, and envelopes. It returns `allow`, `block`, or `approval_required` with an evidence receipt.
 
-The public demo exposes both an HTTP API for the visual replay and a stdio MCP server. The MCP server provides direct evaluation plus controlled policy-wrapped fixture tools, enforcing the decision before tool execution. It does not yet proxy arbitrary third-party upstream MCP servers; that deliberately narrower boundary keeps this hackathon demo safe and auditable.
+The public demo exposes both an HTTP API for the visual replay and a stdio MCP server. The MCP server provides direct evaluation, controlled policy-wrapped fixtures, and a configured stdio upstream broker. It discovers tools with `tools/list`, evaluates policy, and emits a `tools/call` only for an allow decision. It does not claim transparent support for every MCP transport or an unavoidable inline enforcement path.

@@ -28,6 +28,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test --workspace=@atreides/gateway
+      - run: npm run build --workspace=@atreides/sdk
       - run: npm run build --workspace=@atreides/web
       - run: npm audit --omit=dev --audit-level=high
 

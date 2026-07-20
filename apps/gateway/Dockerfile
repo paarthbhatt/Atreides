@@ -3,6 +3,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/gateway/package.json apps/gateway/package.json
 COPY apps/web/package.json apps/web/package.json
+COPY packages/sdk/package.json packages/sdk/package.json
 RUN npm ci --workspace=@atreides/gateway --include-workspace-root
 
 FROM node:22-alpine

