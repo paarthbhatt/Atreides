@@ -3,7 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Atreides — Proof-carrying MCP security",
-  description: "The enforceable trust boundary for AI agents and MCP tools."
+  description: "The enforceable trust boundary for AI agents and MCP tools.",
+  icons: { icon: "/icon.svg" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
