@@ -10,7 +10,9 @@ const stages = [
   ["04", "Atreides blocks", "Provenance makes the unsafe authorization path visible."],
 ] as const;
 
-type Receipt = { decision: string; reason: string; policy: string; hash: string };
+type Receipt = { decision: string; reason: string; policy: string; policyVersion: string; hash: string };
+type GatewayHealth = { status: string; policyVersion: string; durableReceipts: boolean; signedReceipts: boolean };
+type ReceiptVerification = { valid: boolean; receipts: number; failures: string[] };
 const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL ?? "http://localhost:4100";
 
 export default function Home() {
@@ -19,6 +21,8 @@ export default function Home() {
   const [running, setRunning] = useState(false);
   const [gatewayError, setGatewayError] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [health, setHealth] = useState<GatewayHealth | null>(null);
+  const [verification, setVerification] = useState<ReceiptVerification | null>(null);
   const current = stages[stage];
   const blocked = stage === 3;
 
@@ -28,6 +32,17 @@ export default function Home() {
     return () => window.removeEventListener("scroll", update);
   }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${gatewayUrl}/health`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Gateway health check failed.");
+        setHealth(await response.json() as GatewayHealth);
+      })
+      .catch(() => setHealth(null));
+    return () => controller.abort();
+  }, []);
+
   async function runSafeAttack() {
     setRunning(true); setGatewayError(null);
     try {
@@ -35,6 +50,13 @@ export default function Home() {
       const payload = await response.json() as { receipt?: Receipt; error?: string };
       if (!response.ok || !payload.receipt) throw new Error(payload.error ?? "Gateway did not return a receipt.");
       setReceipt(payload.receipt); setStage(3);
+      try {
+        const ledger = await fetch(`${gatewayUrl}/v1/receipts?verify=true`);
+        if (ledger.ok) {
+          const value = await ledger.json() as { verification?: ReceiptVerification };
+          setVerification(value.verification ?? null);
+        }
+      } catch { setVerification(null); }
     } catch (error) {
       setGatewayError(error instanceof Error ? error.message : "Could not reach the gateway.");
     } finally { setRunning(false); }
@@ -87,7 +109,7 @@ export default function Home() {
 
     <section id="console" className="console section">
       <div className="console-copy"><p className="section-index">03 / OPERATOR CONSOLE</p><h2>Every decision is<br />an <span>evidence trail.</span></h2><p>Replay an attempted exploit against the live gateway. Atreides returns an actual policy receipt, with a hash you can inspect.</p><button className="button demo-button" type="button" onClick={runSafeAttack} disabled={running}>{running ? "Running safe attack…" : "Run safe attack"} <b>↗</b></button>{gatewayError && <p className="gateway-error" role="alert">Gateway unavailable: {gatewayError}</p>}</div>
-      <div className="console-window" aria-live="polite"><header><span className="dot red-dot" /><span className="dot" /><span className="dot" /><b>atreides / mission-control</b><span className="live">● LIVE</span></header><div className="metrics"><div><small>POLICY DECISIONS</small><b>{receipt ? "129" : "128"}</b><span>{receipt ? "new receipt captured" : "+12 this session"}</span></div><div><small>BLOCKED CHAINS</small><b className="warning">{receipt ? "04" : "03"}</b><span>all receipts valid</span></div><div><small>UPSTREAM MCP</small><b>04</b><span>healthy</span></div></div><div className="receipt"><div><span className="pill">{receipt?.decision?.toUpperCase() ?? "READY"}</span><b>{receipt ? "External context attempted secret egress" : "Run the safe fixture to obtain a live receipt"}</b><small>{receipt ? `policy / ${receipt.policy}` : "gateway / waiting for replay"}</small>{receipt && <code title={receipt.hash}>sha256 / {receipt.hash.slice(0, 16)}…</code>}</div><span className="check">{receipt ? "✓" : "○"}</span></div>{receipt && <p className="receipt-reason">{receipt.reason}</p>}</div>
+      <div className="console-window" aria-live="polite"><header><span className="dot red-dot" /><span className="dot" /><span className="dot" /><b>atreides / mission-control</b><span className={health ? "live" : "live offline"}>● {health ? "GATEWAY ONLINE" : "GATEWAY OFFLINE"}</span></header><div className="metrics"><div><small>POLICY VERSION</small><b className="policy-version">{health?.policyVersion ?? "—"}</b><span>versioned policy-as-code</span></div><div><small>BLOCKED CHAINS</small><b className="warning">{receipt ? "04" : "03"}</b><span>{verification?.valid ? `${verification.receipts} receipts verified` : "awaiting proof replay"}</span></div><div><small>RECEIPT MODE</small><b className="receipt-mode">{health?.signedReceipts ? "SIGNED" : "HASHED"}</b><span>{health?.durableReceipts ? "durable ledger" : "ephemeral demo ledger"}</span></div></div><div className="receipt"><div><span className="pill">{receipt?.decision?.toUpperCase() ?? "READY"}</span><b>{receipt ? "External context attempted secret egress" : "Run the safe fixture to obtain a live receipt"}</b><small>{receipt ? `policy / ${receipt.policy} · v${receipt.policyVersion}` : "gateway / waiting for replay"}</small>{receipt && <code title={receipt.hash}>sha256 / {receipt.hash.slice(0, 16)}…</code>}</div><span className="check">{verification?.valid ? "✓" : "○"}</span></div>{receipt && <p className="receipt-reason">{receipt.reason}</p>}{verification && <p className={verification.valid ? "verification valid" : "verification invalid"}>{verification.valid ? `Chain integrity verified across ${verification.receipts} receipt${verification.receipts === 1 ? "" : "s"}.` : verification.failures.join(" ")}</p>}</div>
     </section>
     <footer><span>ATREIDES / SECURITY BY PROOF</span><span>BUILT FOR THE MCP ERA</span><span>© 2026</span></footer>
   </main>;

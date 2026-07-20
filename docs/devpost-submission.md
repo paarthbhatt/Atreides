@@ -6,11 +6,11 @@ Atreides is proof-carrying MCP security for AI agents. It evaluates the path fro
 
 ## What it does today
 
-- Runs a local HTTP policy gateway with health, evaluation, receipt, and safe-fixture endpoints.
-- Exposes `evaluate_agent_action` and a controlled `invoke_atreides_wrapped_tool` through a real stdio MCP server.
-- Enforces policy before controlled fixture execution; demonstrates both a blocked secret-read and an allowed public-read path.
+- Runs a local HTTP policy gateway with health, evaluation, policy, receipt-verification, and safe-fixture endpoints.
+- Exposes `evaluate_agent_action`, a controlled `invoke_atreides_wrapped_tool`, and configured upstream MCP discovery/invocation through a real stdio MCP server.
+- Enforces policy before controlled fixture execution and configured stdio upstream MCP calls; demonstrates blocked secret-read/egress and allowed public-read paths.
 - Evaluates provenance trust, data sensitivity, destination, and write impact.
-- Returns hash-chained, in-memory receipts.
+- Returns hash-chained receipts with optional durable JSONL persistence and HMAC signing.
 - Ships a visual web product experience and Docker Compose demo stack.
 
 ## Why it is different
@@ -19,7 +19,7 @@ Most prompt-injection defenses concentrate on detecting suspicious wording. Atre
 
 ## Honest limitations
 
-This prototype is a pre-execution evaluator plus a controlled wrapped-tool demonstration, not a universal prompt-injection solution. It does not yet act as an inline proxy for arbitrary upstream MCP servers, persist receipts durably, authenticate clients, or prevent an agent from ignoring/bypassing the evaluation tool. The demo uses only local fake data and a `.invalid` destination.
+This prototype is a pre-execution evaluator and stdio MCP broker, not a universal prompt-injection solution. It does not yet proxy arbitrary MCP transports or prevent an agent from bypassing Atreides outside the configured broker boundary. Durable receipts and bearer authentication are opt-in configuration; production needs managed keys, identity-aware authorization, and an access-controlled audit store. The demo uses only local fake data and a `.invalid` destination.
 
 ## Suggested video script (≤3 minutes)
 

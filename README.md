@@ -128,7 +128,7 @@ The controlled demo's approved destinations are `internal://diagnostics` and `ht
 ## API
 
 - `GET /health` — gateway status
-- `GET /v1/receipts` — append-only in-memory receipt ledger
+- `GET /v1/receipts?verify=true` — receipt ledger plus hash-chain integrity verification
 - `POST /v1/demo/indirect-prompt-injection` — safe red-team fixture
 - `POST /v1/evaluate` — evaluate an action payload
 - `GET /v1/policy` — active versioned policy bundle
@@ -182,7 +182,7 @@ docs/          Threat model, attack catalog, and hackathon notes
 
 ## Documentation
 
-See [architecture](docs/architecture.md), [threat model](docs/threat-model.md), [attack catalog](docs/attack-catalog.md), [MCP integration](docs/mcp-integration.md), [verification/deploy notes](docs/verification-and-deploy.md), and [Devpost material](docs/devpost-submission.md).
+See [architecture](docs/architecture.md), [threat model](docs/threat-model.md), [attack catalog](docs/attack-catalog.md), [MCP integration](docs/mcp-integration.md), [verification/deploy notes](docs/verification-and-deploy.md), [judging evidence](docs/judging-evidence.md), and [Devpost material](docs/devpost-submission.md).
 
 ## Contributing and disclosure
 

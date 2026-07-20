@@ -19,10 +19,11 @@ test("serves health, evaluates the safe attack fixture, and exposes its receipt"
     assert.equal(receipt.decision, "block");
     assert.match(receipt.hash, /^[a-f0-9]{64}$/);
 
-    const ledger = await fetch(`${baseUrl}/v1/receipts`);
+    const ledger = await fetch(`${baseUrl}/v1/receipts?verify=true`);
     assert.equal(ledger.status, 200);
-    const body = await ledger.json() as { receipts: Array<{ id: string }> };
+    const body = await ledger.json() as { receipts: Array<{ id: string }>; verification: { valid: boolean; receipts: number; failures: string[] } };
     assert.ok(body.receipts.some((item) => item.id === receipt.id));
+    assert.deepEqual(body.verification, { valid: true, receipts: 1, failures: [] });
 
     const previousToken = process.env.ATREIDES_API_TOKEN;
     process.env.ATREIDES_API_TOKEN = "test-token";
