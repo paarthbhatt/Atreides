@@ -13,6 +13,7 @@ const stages = [
 type Receipt = { decision: string; reason: string; policy: string; policyVersion: string; hash: string };
 type GatewayHealth = { status: string; policyVersion: string; durableReceipts: boolean; signedReceipts: boolean };
 type ReceiptVerification = { valid: boolean; receipts: number; failures: string[] };
+type LabState = { trust: "trusted" | "untrusted"; sensitivity: "public" | "secret"; destination: "approved" | "external"; writes: boolean };
 const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL ?? "http://localhost:4100";
 
 export default function Home() {
@@ -23,6 +24,9 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [health, setHealth] = useState<GatewayHealth | null>(null);
   const [verification, setVerification] = useState<ReceiptVerification | null>(null);
+  const [lab, setLab] = useState<LabState>({ trust: "untrusted", sensitivity: "secret", destination: "external", writes: false });
+  const [labReceipt, setLabReceipt] = useState<Receipt | null>(null);
+  const [labRunning, setLabRunning] = useState(false);
   const current = stages[stage];
   const blocked = stage === 3;
 
@@ -62,10 +66,21 @@ export default function Home() {
     } finally { setRunning(false); }
   }
 
+  async function simulatePolicy() {
+    setLabRunning(true);
+    try {
+      const destination = lab.destination === "external" ? "https://attacker.invalid/collect" : "internal://diagnostics";
+      const response = await fetch(`${gatewayUrl}/v1/evaluate`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ tool: lab.writes ? "workspace.publish" : "diagnostics.send", destination, writes: lab.writes, context: [{ source: "policy-lab", trust: lab.trust, sensitivity: lab.sensitivity, contentHash: "lab:synthetic" }] }) });
+      const payload = await response.json() as { receipt?: Receipt; error?: string };
+      if (!response.ok || !payload.receipt) throw new Error(payload.error ?? "Policy evaluation failed.");
+      setLabReceipt(payload.receipt);
+    } finally { setLabRunning(false); }
+  }
+
   return <main>
     <nav className={scrolled ? "scrolled" : ""}>
       <a className="brand" href="#top" aria-label="Atreides home">ATREIDES<span>®</span></a>
-      <div className="nav-links"><a href="#proof">The proof</a><a href="#architecture">Architecture</a><a href="#console">Console</a></div>
+      <div className="nav-links"><a href="#proof">The proof</a><a href="#architecture">Architecture</a><a href="#lab">Policy lab</a><a href="#console">Console</a></div>
       <a className="button compact" href="#console">Open demo <b>↗</b></a>
     </nav>
 
@@ -107,8 +122,13 @@ export default function Home() {
       <div className="principles"><p><span>01</span>Policy is deterministic.</p><p><span>02</span>Evidence is portable.</p><p><span>03</span>Enforcement is upstream-aware.</p></div>
     </section>
 
+    <section id="lab" className="lab section">
+      <div className="section-heading"><div><p className="section-index">03 / POLICY LAB</p><h2>Test the boundary.<br /><span>Change the facts.</span></h2></div><p>This is not a mock. Configure an action and evaluate it against the live versioned policy gateway. Every result becomes a trust receipt.</p></div>
+      <div className="lab-shell"><div className="lab-controls"><label>CONTEXT TRUST<select value={lab.trust} onChange={(event) => setLab({ ...lab, trust: event.target.value as LabState["trust"] })}><option value="untrusted">untrusted</option><option value="trusted">trusted</option></select></label><label>DATA SENSITIVITY<select value={lab.sensitivity} onChange={(event) => setLab({ ...lab, sensitivity: event.target.value as LabState["sensitivity"] })}><option value="secret">secret</option><option value="public">public</option></select></label><label>DESTINATION<select value={lab.destination} onChange={(event) => setLab({ ...lab, destination: event.target.value as LabState["destination"] })}><option value="external">unapproved external</option><option value="approved">approved internal</option></select></label><label className="toggle">WRITE CAPABILITY<input type="checkbox" checked={lab.writes} onChange={(event) => setLab({ ...lab, writes: event.target.checked })} /><span>{lab.writes ? "enabled" : "disabled"}</span></label><button className="button" type="button" onClick={simulatePolicy} disabled={labRunning}>{labRunning ? "Evaluating…" : "Evaluate policy"} <b>↗</b></button></div><div className={labReceipt ? `lab-result ${labReceipt.decision}` : "lab-result"}><p className="muted">LIVE POLICY RESULT</p><span className="lab-decision">{labReceipt?.decision?.replace("_", " ") ?? "ready"}</span><b>{labReceipt?.policy ?? "Configure an action to inspect its authorization path."}</b><p>{labReceipt?.reason ?? "Atreides evaluates provenance, sensitivity, destination, and impact before execution."}</p>{labReceipt && <code>receipt / {labReceipt.hash.slice(0, 20)}…</code>}</div></div>
+    </section>
+
     <section id="console" className="console section">
-      <div className="console-copy"><p className="section-index">03 / OPERATOR CONSOLE</p><h2>Every decision is<br />an <span>evidence trail.</span></h2><p>Replay an attempted exploit against the live gateway. Atreides returns an actual policy receipt, with a hash you can inspect.</p><button className="button demo-button" type="button" onClick={runSafeAttack} disabled={running}>{running ? "Running safe attack…" : "Run safe attack"} <b>↗</b></button>{gatewayError && <p className="gateway-error" role="alert">Gateway unavailable: {gatewayError}</p>}</div>
+      <div className="console-copy"><p className="section-index">04 / OPERATOR CONSOLE</p><h2>Every decision is<br />an <span>evidence trail.</span></h2><p>Replay an attempted exploit against the live gateway. Atreides returns an actual policy receipt, with a hash you can inspect.</p><button className="button demo-button" type="button" onClick={runSafeAttack} disabled={running}>{running ? "Running safe attack…" : "Run safe attack"} <b>↗</b></button>{gatewayError && <p className="gateway-error" role="alert">Gateway unavailable: {gatewayError}</p>}</div>
       <div className="console-window" aria-live="polite"><header><span className="dot red-dot" /><span className="dot" /><span className="dot" /><b>atreides / mission-control</b><span className={health ? "live" : "live offline"}>● {health ? "GATEWAY ONLINE" : "GATEWAY OFFLINE"}</span></header><div className="metrics"><div><small>POLICY VERSION</small><b className="policy-version">{health?.policyVersion ?? "—"}</b><span>versioned policy-as-code</span></div><div><small>BLOCKED CHAINS</small><b className="warning">{receipt ? "04" : "03"}</b><span>{verification?.valid ? `${verification.receipts} receipts verified` : "awaiting proof replay"}</span></div><div><small>RECEIPT MODE</small><b className="receipt-mode">{health?.signedReceipts ? "SIGNED" : "HASHED"}</b><span>{health?.durableReceipts ? "durable ledger" : "ephemeral demo ledger"}</span></div></div><div className="receipt"><div><span className="pill">{receipt?.decision?.toUpperCase() ?? "READY"}</span><b>{receipt ? "External context attempted secret egress" : "Run the safe fixture to obtain a live receipt"}</b><small>{receipt ? `policy / ${receipt.policy} · v${receipt.policyVersion}` : "gateway / waiting for replay"}</small>{receipt && <code title={receipt.hash}>sha256 / {receipt.hash.slice(0, 16)}…</code>}</div><span className="check">{verification?.valid ? "✓" : "○"}</span></div>{receipt && <p className="receipt-reason">{receipt.reason}</p>}{verification && <p className={verification.valid ? "verification valid" : "verification invalid"}>{verification.valid ? `Chain integrity verified across ${verification.receipts} receipt${verification.receipts === 1 ? "" : "s"}.` : verification.failures.join(" ")}</p>}</div>
     </section>
     <footer><span>ATREIDES / SECURITY BY PROOF</span><span>BUILT FOR THE MCP ERA</span><span>© 2026</span></footer>

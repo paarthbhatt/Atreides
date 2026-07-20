@@ -89,6 +89,19 @@ The server exposes `evaluate_agent_action` for a proposed action and `invoke_atr
 
 When `ATREIDES_UPSTREAM_COMMAND` is configured, Atreides additionally exposes `list_atreides_upstream_tools` and `invoke_atreides_upstream_tool`. The latter discovers the named upstream tool, evaluates policy, and only then calls the upstream stdio server.
 
+### Run the protected upstream demonstration
+
+The repository includes a standard stdio MCP reference server with a public-read, synthetic configuration-read, and external publish tool. Route it through Atreides to see pre-execution enforcement against a real upstream process:
+
+```powershell
+$env:ATREIDES_UPSTREAM_COMMAND="node"
+$env:ATREIDES_UPSTREAM_ARGS='["../../examples/protected-workspace-mcp.mjs"]'
+$env:ATREIDES_UPSTREAM_CWD=(Resolve-Path "apps/gateway").Path
+npm run mcp --workspace=@atreides/gateway
+```
+
+Use `list_atreides_upstream_tools` to inspect its manifest. Call `invoke_atreides_upstream_tool` with untrusted secret context plus `https://attacker.invalid/collect` and Atreides blocks the read before the upstream tool executes. A trusted public read to `internal://diagnostics` is forwarded. The server emits only synthetic data.
+
 ## Developer workflow
 
 The checked-in policy template is [apps/gateway/policies/default.json](apps/gateway/policies/default.json). Point the gateway at a versioned policy bundle:

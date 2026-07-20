@@ -11,7 +11,7 @@ Atreides is proof-carrying MCP security for AI agents. It evaluates the path fro
 - Enforces policy before controlled fixture execution and configured stdio upstream MCP calls; demonstrates blocked secret-read/egress and allowed public-read paths.
 - Evaluates provenance trust, data sensitivity, destination, and write impact.
 - Returns hash-chained receipts with optional durable JSONL persistence and HMAC signing.
-- Ships a visual web product experience and Docker Compose demo stack.
+- Ships a visual web product experience with a live policy laboratory, receipt-chain verification, and Docker Compose demo stack.
 
 ## Why it is different
 
