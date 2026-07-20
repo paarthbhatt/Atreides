@@ -108,11 +108,14 @@ The controlled demo's approved destinations are `internal://diagnostics` and `ht
 
 ```bash
 npm run typecheck
+npm run lint
 npm run test --workspace=@atreides/gateway
 npm run build --workspace=@atreides/web
 ```
 
 The gateway suite covers policy evaluation, pre-execution fixture enforcement, benign allowed execution, and the HTTP receipt lifecycle.
+
+GitHub Actions runs this same quality gate on every pull request and `main` push, then builds the Compose stack and smoke-tests the product, health endpoint, and safe attack fixture. The workflow deliberately stops before external deployment; production delivery needs a target environment and its credentials.
 
 ## Containers
 

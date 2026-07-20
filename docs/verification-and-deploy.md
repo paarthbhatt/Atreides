@@ -7,6 +7,7 @@ From the repository root:
 ```bash
 npm install
 npm run typecheck
+npm run lint
 npm run test --workspace=@atreides/gateway
 npm run build --workspace=@atreides/web
 ```
@@ -51,6 +52,12 @@ docker compose up --build
 ```
 
 In a new terminal, repeat the gateway health and fixture requests above. The compose stack exposes web on port 3000 and gateway on port 4100. Stop it with `docker compose down`.
+
+## CI/CD preflight
+
+GitHub Actions runs on every pull request, every push to `main`, and manual dispatch. It installs from the lockfile, lints both workspaces, type-checks, runs the gateway tests, builds the web app, checks for high/critical production dependency advisories, then builds and smoke-tests the Docker Compose stack.
+
+The workflow is deliberately deployment-target-neutral. Configure a protected deployment environment and credentials before adding a deployment job; no external environment is mutated by the current pipeline.
 
 ## Pre-public-repo checklist
 

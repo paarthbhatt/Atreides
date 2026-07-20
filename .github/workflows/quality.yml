@@ -1,13 +1,23 @@
-name: quality
+name: ci
 
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  verify:
+  quality:
+    name: Quality gate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,6 +25,49 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run lint
       - run: npm run typecheck
       - run: npm run test --workspace=@atreides/gateway
       - run: npm run build --workspace=@atreides/web
+      - run: npm audit --omit=dev --audit-level=high
+
+  container-smoke:
+    name: Container smoke test
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose config --quiet
+      - run: docker compose up --build --detach
+      - name: Verify product and gateway
+        run: |
+          curl --fail --retry 15 --retry-delay 2 http://localhost:3000
+          node --input-type=module <<'NODE'
+          const ready = async (url) => {
+            for (let attempt = 0; attempt < 15; attempt += 1) {
+              try {
+                const response = await fetch(url);
+                if (response.ok) return response;
+              } catch {}
+              await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+            throw new Error(`Timed out waiting for ${url}`);
+          };
+
+          const health = await ready("http://localhost:4100/health");
+          const healthPayload = await health.json();
+          if (healthPayload.status !== "ok") throw new Error("Gateway health check failed.");
+
+          const fixture = await fetch("http://localhost:4100/v1/demo/indirect-prompt-injection", { method: "POST" });
+          const fixturePayload = await fixture.json();
+          if (!fixture.ok || fixturePayload.receipt?.decision !== "block" || fixturePayload.receipt?.policy !== "atreides/no-untrusted-secret-egress") {
+            throw new Error("Safe attack fixture was not blocked by the expected policy.");
+          }
+          NODE
+      - name: Collect container logs
+        if: always()
+        run: docker compose logs --no-color
+      - name: Stop containers
+        if: always()
+        run: docker compose down --volumes --remove-orphans
