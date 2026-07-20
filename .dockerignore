@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.npm-cache
+.appdata
+.localappdata
+coverage
+*.tsbuildinfo
