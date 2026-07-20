@@ -42,7 +42,6 @@ jobs:
       - run: docker compose up --build --detach
       - name: Verify product and gateway
         run: |
-          curl --fail --retry 15 --retry-delay 2 http://localhost:3000
           node --input-type=module <<'NODE'
           const ready = async (url) => {
             for (let attempt = 0; attempt < 15; attempt += 1) {
@@ -54,6 +53,9 @@ jobs:
             }
             throw new Error(`Timed out waiting for ${url}`);
           };
+
+          const web = await ready("http://localhost:3000");
+          if (!(await web.text()).includes("Atreides")) throw new Error("Product page did not render expected content.");
 
           const health = await ready("http://localhost:4100/health");
           const healthPayload = await health.json();
