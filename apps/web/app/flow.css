@@ -1,0 +1,710 @@
+.mini-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin: 0 0 20px;
+  background: var(--line);
+}
+
+.mini-step {
+  border-top: 2px solid transparent;
+  background: #0a0b09;
+  padding: 12px 10px;
+}
+
+.mini-step span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b6b65;
+  font: 9px "DM Mono", monospace;
+}
+
+.mini-step b {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.mini-step.complete,
+.mini-step.current {
+  border-color: rgba(210, 251, 98, 0.42);
+  background: rgba(210, 251, 98, 0.045);
+}
+
+.mini-step.current {
+  border-color: var(--lime);
+}
+
+.mini-step.current b {
+  color: var(--ink);
+}
+
+.flow-explainer {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 72% 10%, rgba(210, 251, 98, 0.08), transparent 34%),
+    linear-gradient(180deg, #090a08, #10110e);
+}
+
+.flow-explainer::before {
+  content: "";
+  position: absolute;
+  inset: 8% -10% auto 42%;
+  height: 62%;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(210, 251, 98, 0.12), transparent 58%);
+  filter: blur(28px);
+  opacity: 0.75;
+}
+
+.workflow-board {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(rgba(233, 233, 226, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 233, 226, 0.035) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(210, 251, 98, 0.035), rgba(8, 9, 7, 0.84) 46%, rgba(250, 98, 76, 0.035));
+  background-size: 42px 42px, 42px 42px, auto;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+}
+
+.workflow-board::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(210, 251, 98, 0.05), transparent);
+  transform: translateX(-100%);
+  animation: flow-scan 7s ease-in-out infinite;
+}
+
+.workflow-map {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+
+.workflow-node {
+  position: relative;
+  min-height: 172px;
+  cursor: pointer;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: rgba(8, 9, 7, 0.45);
+  color: var(--muted);
+  padding: 19px 15px 22px;
+  text-align: left;
+  transition:
+    background 0.28s,
+    color 0.28s,
+    transform 0.28s,
+    box-shadow 0.28s;
+}
+
+.workflow-node:last-child {
+  border-right: 0;
+}
+
+.workflow-node:hover {
+  background: rgba(210, 251, 98, 0.045);
+  color: var(--ink);
+}
+
+.workflow-node:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: -2px;
+}
+
+.workflow-node span {
+  display: block;
+  color: var(--lime);
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 0.12em;
+}
+
+.workflow-node small {
+  display: block;
+  margin: 22px 0 10px;
+  color: #77776f;
+  font: 9px "DM Mono", monospace;
+  letter-spacing: 0.12em;
+}
+
+.workflow-node b {
+  display: block;
+  max-width: 160px;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.workflow-node.complete {
+  color: #c9c9c1;
+}
+
+.workflow-node.complete::after {
+  content: "";
+  position: absolute;
+  right: 15px;
+  bottom: 16px;
+  left: 15px;
+  height: 1px;
+  background: rgba(210, 251, 98, 0.45);
+}
+
+.workflow-node.active {
+  background: linear-gradient(180deg, rgba(210, 251, 98, 0.12), rgba(210, 251, 98, 0.032));
+  color: var(--ink);
+  box-shadow:
+    inset 0 2px 0 var(--lime),
+    0 18px 60px rgba(210, 251, 98, 0.06);
+  transform: translateY(-2px);
+}
+
+.workflow-lane {
+  position: relative;
+  z-index: 1;
+  height: 158px;
+  margin: 0 7vw;
+  border-bottom: 1px solid rgba(233, 233, 226, 0.12);
+}
+
+.lane-segment {
+  position: absolute;
+  top: 76px;
+  height: 2px;
+}
+
+.lane-segment.risk {
+  left: 0;
+  width: 47%;
+  background: linear-gradient(90deg, var(--red), var(--amber));
+}
+
+.lane-segment.governed {
+  left: 47%;
+  width: 20%;
+  background: linear-gradient(90deg, var(--amber), var(--lime));
+}
+
+.lane-segment.audit {
+  right: 0;
+  width: 33%;
+  background: linear-gradient(90deg, var(--lime), rgba(210, 251, 98, 0.2));
+}
+
+.request-packet,
+.receipt-packet {
+  position: absolute;
+  top: 61px;
+  display: grid;
+  place-items: center;
+  min-width: 76px;
+  height: 31px;
+  border: 1px solid rgba(210, 251, 98, 0.44);
+  background: #0b0c0a;
+  color: var(--lime);
+  font: 9px "DM Mono", monospace;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 24px rgba(210, 251, 98, 0.16);
+}
+
+.request-packet {
+  left: 0;
+  animation: request-path 8.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.receipt-packet {
+  right: 0;
+  opacity: 0;
+  animation: receipt-path 8.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.blocked-egress {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  padding: 7px 9px;
+  border: 1px solid rgba(250, 98, 76, 0.45);
+  color: var(--red);
+  background: rgba(8, 9, 7, 0.78);
+  font: 9px "DM Mono", monospace;
+  letter-spacing: 0.08em;
+  transform: translateX(-50%) scale(0.94);
+  opacity: 0;
+  animation: block-flash 8.4s ease-in-out infinite;
+}
+
+.workflow-detail {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 0.74fr 1.26fr;
+  gap: 34px;
+  align-items: stretch;
+  padding: 0 7vw 36px;
+}
+
+.workflow-core {
+  position: relative;
+  min-height: 278px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(210, 251, 98, 0.34);
+  background: radial-gradient(circle at center, rgba(210, 251, 98, 0.13), rgba(8, 9, 7, 0.82) 58%);
+  isolation: isolate;
+  perspective: 900px;
+  text-align: center;
+}
+
+.core-ring,
+.workflow-core::before,
+.workflow-core::after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(210, 251, 98, 0.18);
+}
+
+.core-ring {
+  inset: 48px;
+  border-radius: 50%;
+  animation: gate-pulse 2.7s ease-in-out infinite;
+}
+
+.workflow-core::before {
+  inset: 26px 54px;
+  transform: rotate(7deg);
+  animation: gate-spin 10s linear infinite;
+}
+
+.workflow-core::after {
+  inset: 54px 26px;
+  border-color: rgba(250, 98, 76, 0.18);
+  transform: rotate(-10deg);
+  animation: gate-spin 12s linear infinite reverse;
+}
+
+.core-scan {
+  position: absolute;
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lime), transparent);
+  animation: core-scan 2.8s ease-in-out infinite;
+}
+
+.policy-prism {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: 118px;
+  height: 118px;
+  transform-style: preserve-3d;
+  transform: translate(-50%, -50%) rotateX(-18deg) rotateY(28deg);
+  animation: prism-orbit 10s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+}
+
+.prism-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(210, 251, 98, 0.38);
+  background:
+    linear-gradient(145deg, rgba(210, 251, 98, 0.12), rgba(8, 9, 7, 0.58)),
+    rgba(8, 9, 7, 0.72);
+  color: var(--lime);
+  font: 9px "DM Mono", monospace;
+  letter-spacing: 0.14em;
+  box-shadow:
+    inset 0 0 24px rgba(210, 251, 98, 0.055),
+    0 0 18px rgba(210, 251, 98, 0.06);
+  backface-visibility: hidden;
+}
+
+.prism-front {
+  transform: translateZ(59px);
+}
+
+.prism-back {
+  transform: rotateY(180deg) translateZ(59px);
+}
+
+.prism-right {
+  border-color: rgba(250, 98, 76, 0.5);
+  color: var(--red);
+  transform: rotateY(90deg) translateZ(59px);
+}
+
+.prism-left {
+  transform: rotateY(-90deg) translateZ(59px);
+}
+
+.prism-top {
+  transform: rotateX(90deg) translateZ(59px);
+}
+
+.prism-bottom {
+  transform: rotateX(-90deg) translateZ(59px);
+}
+
+.workflow-core b {
+  position: relative;
+  z-index: 2;
+  font-size: 24px;
+  letter-spacing: 0.18em;
+  transform: translateY(-92px);
+}
+
+.workflow-core small {
+  position: relative;
+  z-index: 2;
+  margin-top: 60px;
+  color: var(--lime);
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 0.12em;
+  transform: translateY(91px);
+}
+
+.workflow-detail article {
+  display: flex;
+  min-height: 278px;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: rgba(8, 9, 7, 0.56);
+  padding: 32px;
+}
+
+.workflow-detail article span {
+  color: var(--lime);
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 0.12em;
+}
+
+.workflow-detail h3 {
+  max-width: 620px;
+  margin: 18px 0 14px;
+  color: var(--ink);
+  font-size: clamp(28px, 3vw, 45px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.workflow-detail p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.workflow-ledger {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-top: 1px solid var(--line);
+}
+
+.workflow-ledger span {
+  min-height: 68px;
+  border-right: 1px solid var(--line);
+  color: var(--muted);
+  padding: 18px 16px;
+  font: 10px "DM Mono", monospace;
+}
+
+.workflow-ledger span:last-child {
+  border-right: 0;
+  color: var(--lime);
+}
+
+.workflow-board.step-4 .workflow-core,
+.workflow-board.step-5 .workflow-core {
+  border-color: var(--lime);
+  box-shadow:
+    0 0 82px rgba(210, 251, 98, 0.14),
+    inset 0 0 0 1px rgba(210, 251, 98, 0.18);
+}
+
+.workflow-board.step-4 .policy-prism,
+.workflow-board.step-5 .policy-prism {
+  animation-duration: 6.8s;
+}
+
+.workflow-board.step-5 .prism-right {
+  background:
+    linear-gradient(145deg, rgba(250, 98, 76, 0.2), rgba(8, 9, 7, 0.64)),
+    rgba(8, 9, 7, 0.8);
+  box-shadow:
+    inset 0 0 30px rgba(250, 98, 76, 0.08),
+    0 0 34px rgba(250, 98, 76, 0.13);
+}
+
+.workflow-board.step-6 .prism-back,
+.workflow-board.step-7 .prism-bottom {
+  border-color: var(--lime);
+  background:
+    linear-gradient(145deg, rgba(210, 251, 98, 0.2), rgba(8, 9, 7, 0.62)),
+    rgba(8, 9, 7, 0.8);
+}
+
+.workflow-board.step-5 .workflow-detail article,
+.workflow-board.step-5 .workflow-ledger span:nth-child(5) {
+  border-color: rgba(250, 98, 76, 0.44);
+  color: var(--red);
+}
+
+.workflow-board.step-6 .workflow-ledger span:nth-child(6),
+.workflow-board.step-7 .workflow-ledger span:nth-child(6) {
+  background: rgba(210, 251, 98, 0.05);
+}
+
+.flow-caption {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 0.05em;
+}
+
+.flow-caption span {
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  margin-right: 11px;
+  background: var(--lime);
+  vertical-align: middle;
+}
+
+@keyframes flow-scan {
+  0%,
+  42% {
+    transform: translateX(-100%);
+  }
+
+  72%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes request-path {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+
+  8%,
+  62% {
+    opacity: 1;
+  }
+
+  44% {
+    border-color: rgba(250, 98, 76, 0.6);
+    color: var(--red);
+    transform: translateX(44vw);
+  }
+
+  58%,
+  100% {
+    opacity: 0.18;
+    transform: translateX(44vw) scale(0.82);
+  }
+}
+
+@keyframes receipt-path {
+  0%,
+  55% {
+    opacity: 0;
+    transform: translateX(-30vw);
+  }
+
+  68% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes block-flash {
+  0%,
+  42% {
+    opacity: 0;
+  }
+
+  50%,
+  68% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  86%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes gate-spin {
+  to {
+    transform: rotate(367deg);
+  }
+}
+
+@keyframes gate-pulse {
+  50% {
+    opacity: 0.52;
+    transform: scale(1.16);
+  }
+}
+
+@keyframes prism-orbit {
+  0% {
+    transform: translate(-50%, -50%) rotateX(-18deg) rotateY(28deg);
+  }
+
+  38% {
+    transform: translate(-50%, -50%) rotateX(-10deg) rotateY(128deg);
+  }
+
+  68% {
+    transform: translate(-50%, -50%) rotateX(-24deg) rotateY(238deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotateX(-18deg) rotateY(388deg);
+  }
+}
+
+@keyframes core-scan {
+  0% {
+    transform: translateX(-150%) rotate(18deg);
+  }
+
+  100% {
+    transform: translateX(150%) rotate(18deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workflow-board::before,
+  .request-packet,
+  .receipt-packet,
+  .blocked-egress,
+  .policy-prism,
+  .core-ring,
+  .workflow-core::before,
+  .workflow-core::after,
+  .core-scan {
+    animation: none;
+  }
+
+  .request-packet,
+  .receipt-packet,
+  .blocked-egress {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1040px) {
+  .workflow-map {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .workflow-node {
+    min-height: 128px;
+  }
+
+  .workflow-lane {
+    display: none;
+  }
+
+  .workflow-detail {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+
+  .workflow-ledger {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .mini-flow,
+  .workflow-map,
+  .workflow-ledger {
+    grid-template-columns: 1fr;
+  }
+
+  .workflow-node {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .workflow-node.active {
+    transform: none;
+  }
+
+  .workflow-detail {
+    padding: 22px;
+  }
+
+  .workflow-detail article {
+    min-height: auto;
+    padding: 24px;
+  }
+
+  .workflow-core {
+    min-height: 210px;
+  }
+
+  .policy-prism {
+    width: 96px;
+    height: 96px;
+  }
+
+  .prism-front {
+    transform: translateZ(48px);
+  }
+
+  .prism-back {
+    transform: rotateY(180deg) translateZ(48px);
+  }
+
+  .prism-right {
+    transform: rotateY(90deg) translateZ(48px);
+  }
+
+  .prism-left {
+    transform: rotateY(-90deg) translateZ(48px);
+  }
+
+  .prism-top {
+    transform: rotateX(90deg) translateZ(48px);
+  }
+
+  .prism-bottom {
+    transform: rotateX(-90deg) translateZ(48px);
+  }
+
+  .workflow-core b {
+    transform: translateY(-76px);
+  }
+
+  .workflow-core small {
+    transform: translateY(76px);
+  }
+
+  .workflow-ledger span {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
