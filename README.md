@@ -46,6 +46,10 @@ flowchart LR
 - Node.js **22 or later**
 - npm **10 or later**
 
+### Supported platforms
+
+Atreides has been tested on Windows with Node.js 22 and npm 10. It should also run on macOS and Linux wherever Node.js 22, npm 10, and Docker are available. The gateway integrates with stdio-compatible MCP servers.
+
 Clone the repository, then install dependencies:
 
 ```bash
@@ -198,7 +202,9 @@ A production implementation would require an inline enforcement boundary, authen
 
 ## Codex / GPT-5.6 build record
 
-Codex was used during this build for architecture decomposition, TypeScript scaffolding, policy-test design, visual-system iteration, and verification. `docs/codex-build-log.md` records genuine contributions only; add the required Devpost `/feedback` session ID before submission.
+Codex was used during this build for architecture decomposition, TypeScript scaffolding, policy-test design, visual-system iteration, and verification. `docs/codex-build-log.md` records genuine contributions only.
+
+Devpost `/feedback` session ID: `019f8069-0024-7980-8c69-fc984672e400`
 
 ## Repository map
 

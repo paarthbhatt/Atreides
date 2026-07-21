@@ -10,4 +10,6 @@ Record only work actually performed in the core build session.
 | Security tests | Created the indirect-injection regression test. | Confirmed it blocks secret egress deterministically. |
 | Product design | Iterated the narrative UI around the actual attack replay and live policy laboratory. | Checked responsive behavior, live gateway values, receipt verification, and browser-console output. |
 
-Before submission, add the genuine `/feedback` session ID here and in Devpost. Do not claim model use that did not occur.
+Devpost `/feedback` session ID: `019f8069-0024-7980-8c69-fc984672e400`
+
+This log records only work actually performed in the core build session. Do not claim model use that did not occur.
