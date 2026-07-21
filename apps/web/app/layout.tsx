@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./flow.css";
+import "./responsive.css";
 
 export const metadata: Metadata = {
   title: "Atreides - Proof-carrying MCP security",
