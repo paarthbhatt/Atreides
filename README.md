@@ -2,11 +2,21 @@
 
 > **Proof-carrying MCP security for AI agents.**
 
-Atreides is a developer-focused security gateway that tracks the path from untrusted context to an MCP action, evaluates deterministic policy, and produces a signed, hash-chained trust receipt. It can broker configured upstream stdio MCP tools, enforcing policy before an allowed tool call is forwarded. The included demo safely recreates an indirect prompt-injection attempt to exfiltrate fake secret-labelled data.
+Atreides is an MCP security gateway that blocks unsafe agent tool calls before execution, independent of the LLM's own reasoning, and produces a signed, hash-chained receipt explaining exactly why. It can broker configured upstream stdio MCP tools, enforcing policy before an allowed tool call is forwarded. The included demo safely recreates an indirect prompt-injection attempt to exfiltrate fake secret-labelled data.
 
 Instead of deciding whether text *looks* malicious, Atreides asks whether a specific provenance can authorize a specific capability on specific data for a specific destination. The result is explainable: a decision, named policy, reason, and receipt—not a model confidence score.
 
 > **Prototype scope:** Atreides brokers configured stdio upstream MCP servers through a generic discovery-and-invocation boundary. It is not yet a transparent drop-in transport proxy for every MCP transport or a complete production control plane. See [Security boundaries](#security-boundaries) for the exact boundary.
+
+## If you are judging this project
+
+Atreides is not another AI wrapper. It is developer security infrastructure for the MCP era:
+
+- **The vulnerability:** untrusted content can indirectly instruct an agent to leak secret-labelled data through a tool call.
+- **The fix:** Atreides evaluates provenance, sensitivity, destination, and action impact before the MCP tool executes.
+- **The proof:** every decision returns a named policy reason and hash-chained trust receipt that can be verified later.
+
+The fastest way to evaluate the project is to run the web demo, click **Run before/after proof**, then inspect the generated block receipt and gateway tests.
 
 ## What makes it different
 

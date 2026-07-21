@@ -2,7 +2,9 @@
 
 ## Project summary
 
-Atreides is proof-carrying MCP security for AI agents. It evaluates the path from untrusted context to a requested MCP action, returns a deterministic allow/block/approval decision, and records a hash-chained trust receipt. The working demo recreates a safe indirect prompt-injection attempt to send fake secret-labelled data to an unapproved destination, then blocks it under a named policy.
+Atreides is an MCP security gateway that blocks unsafe agent tool calls before execution, independent of the LLM's own reasoning, and records a hash-chained trust receipt explaining exactly why. The working demo recreates a safe indirect prompt-injection attempt to send fake secret-labelled data to an unapproved destination, then blocks it under `atreides/no-untrusted-secret-egress`.
+
+One-line judge framing: **not another AI wrapper; an enforceable security boundary for MCP agents.**
 
 ## What it does today
 
@@ -16,6 +18,8 @@ Atreides is proof-carrying MCP security for AI agents. It evaluates the path fro
 ## Why it is different
 
 Most prompt-injection defenses concentrate on detecting suspicious wording. Atreides makes the action boundary explicit: untrusted provenance cannot by itself authorize secret egress or other high-impact tool actions. The decision is explainable through a policy name, human-readable reason, and receipt—not a model confidence score.
+
+The USP is model-independent enforcement: the LLM may read the malicious instruction, but Atreides governs whether the resulting MCP action is allowed before any upstream tool can execute.
 
 ## Honest limitations
 

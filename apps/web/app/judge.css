@@ -1,0 +1,56 @@
+.judge-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 760px;
+  margin-top: 28px;
+  border: 1px solid rgba(210, 251, 98, 0.26);
+  background:
+    linear-gradient(90deg, rgba(210, 251, 98, 0.055), rgba(8, 9, 7, 0.52)),
+    rgba(8, 9, 7, 0.42);
+  backdrop-filter: blur(12px);
+}
+
+.judge-strip span {
+  min-height: 72px;
+  border-right: 1px solid var(--line);
+  color: var(--muted);
+  padding: 17px 16px;
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 0.08em;
+  line-height: 1.55;
+  text-transform: uppercase;
+}
+
+.judge-strip span:last-child {
+  border-right: 0;
+}
+
+.judge-strip b {
+  display: block;
+  color: var(--lime);
+  font-weight: 600;
+}
+
+@media (max-width: 920px) {
+  .judge-strip {
+    max-width: 640px;
+  }
+}
+
+@media (max-width: 640px) {
+  .judge-strip {
+    grid-template-columns: 1fr;
+    margin-top: 24px;
+  }
+
+  .judge-strip span {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 15px;
+  }
+
+  .judge-strip span:last-child {
+    border-bottom: 0;
+  }
+}

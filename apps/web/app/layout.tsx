@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./flow.css";
+import "./judge.css";
 import "./responsive.css";
 
 export const metadata: Metadata = {

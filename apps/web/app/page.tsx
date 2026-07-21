@@ -174,8 +174,13 @@ export default function Home() {
       <div className="hero-copy">
         <p className="kicker">TRUST THE AGENT.<br /><strong>VERIFY THE ACTION.</strong></p>
         <h1>Language becomes authority.<br />Atreides makes it <strong>enforceable.</strong></h1>
-        <p className="lede">A proof-carrying security gateway for MCP agents. Discover the path from untrusted context to sensitive action, enforce policy at the boundary, and retain a verifiable decision receipt.</p>
+        <p className="lede">Atreides is an MCP security gateway that blocks unsafe agent tool calls before execution, independent of the LLM&apos;s own reasoning, then emits a verifiable receipt explaining exactly why.</p>
         <div className="actions"><a className="button" href="#proof">Trace an attack <b>↓</b></a><a className="text-link" href="#architecture">Explore the system <b>→</b></a></div>
+        <div className="judge-strip" aria-label="Atreides judging summary">
+          <span><b>MCP-native</b> security gateway</span>
+          <span><b>Pre-execution</b> unsafe tool-call block</span>
+          <span><b>Hash-chained</b> audit receipts</span>
+        </div>
       </div>
       <HeroField />
       <div className="orbit" aria-hidden="true"><div className="orb orb-one" /><div className="orb orb-two" /><div className="node n1" /><div className="node n2" /><div className="node n3" /><div className="threat-line" /><div className="orbit-label top-label">UNTRUSTED<br />CONTEXT</div><div className="orbit-label right-label">MCP<br />ACTION</div><div className="orbit-label bottom-label">POLICY<br />BOUNDARY</div></div>
@@ -183,7 +188,7 @@ export default function Home() {
     </section>
 
     <section id="proof" className="proof section">
-      <div className="section-heading"><div><p className="section-index">01 / ATTACK REPLAY</p><h2>One unsafe instruction.<br /><span>One observable chain.</span></h2></div><p>Atreides sees more than a prompt. It tracks origin, sensitivity, tool capability, destination, and policy before an action crosses the MCP boundary.</p></div>
+      <div className="section-heading"><div><p className="section-index">01 / ATTACK REPLAY</p><h2>Same attack.<br /><span>Blocked before execution.</span></h2></div><p>Judges can see the complete before/after: an indirect prompt injection attempts secret egress, Atreides blocks the unauthorized MCP action, and the receipt proves why.</p></div>
       <div className="replay">
         <div className="replay-steps">{stages.map(([id, title], index) => <button key={id} className={index === stage ? "active" : ""} onClick={() => setStage(index)} aria-pressed={index === stage}><span>{id}</span><b>{title}</b><i /></button>)}</div>
         <div className="terminal-card">
@@ -207,7 +212,7 @@ export default function Home() {
     </section>
 
     <section id="architecture" className="architecture section grid-bg">
-      <div className="section-heading"><div><p className="section-index">02 / THE DIFFERENCE</p><h2>Policy follows<br /><span>provenance.</span></h2></div><p>Detection asks whether a phrase looks dangerous. Atreides asks whether untrusted context is authorizing a risky capability and makes its decision deterministic.</p></div>
+      <div className="section-heading"><div><p className="section-index">02 / THE DIFFERENCE</p><h2>Not a wrapper.<br /><span>An enforcement layer.</span></h2></div><p>Detection asks whether a phrase looks dangerous. Atreides asks whether untrusted context is authorized to use a risky MCP capability, then enforces that answer outside the model.</p></div>
       <div className="system" aria-label="Atreides policy flow">
         <div className="system-node"><small>01</small><b>Context envelope</b><span>Origin · trust · sensitivity · hash</span></div><div className="wire">→</div>
         <div className="system-node"><small>02</small><b>Action graph</b><span>Task · tool · destination · asset</span></div><div className="wire">→</div>
