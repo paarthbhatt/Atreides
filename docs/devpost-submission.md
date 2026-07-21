@@ -30,6 +30,8 @@ This prototype is a pre-execution evaluator and stdio MCP broker, not a universa
 5. **2:15-2:45 - Policy lab:** Change a fact in the live policy laboratory and evaluate it. This demonstrates deterministic policy-as-code rather than one hard-coded demo path.
 6. **2:45-3:00 - Difference:** “Atreides governs whether provenance can authorize capability. It does not guess from prompt wording.”
 
+If the public frontend cannot reach its configured gateway, the proof button enters a visibly labelled offline presentation fallback. Do not present this local result as evidence: it does not call the gateway or verify a hash chain. The real gateway path remains the proof for the implementation and audit claims.
+
 ## Codex / GPT-5.6 disclosure
 
 Use only the statement backed by the build log: Codex/GPT-5.6 assisted the developer with architecture decomposition, TypeScript scaffolding, policy-test design, visual-system iteration, and verification. The developer reviewed the output and selected the final security scope. Before submitting, add the actual Codex `/feedback` session ID and remove any unverified/placeholder entries from [codex-build-log.md](codex-build-log.md).

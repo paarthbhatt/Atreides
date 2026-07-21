@@ -79,6 +79,10 @@ Open the product at `http://localhost:3000` and select **Run before/after proof*
 
 The baseline endpoint deliberately does not invoke an LLM, transmit any data, or expose a real secret. It demonstrates the missing action boundary. The Atreides decision and receipt verification are real gateway operations.
 
+### Offline presentation fallback
+
+If the configured gateway cannot be reached within three seconds, **Run before/after proof** presents a clearly labelled local fallback so a hosted frontend still has a complete click-through demo. The fallback never calls a server and explicitly says that its result is not a gateway receipt or verified hash chain. It is presentation continuity only; use a deployed gateway for enforcement and audit evidence.
+
 ## MCP integration
 
 Atreides also exposes the policy evaluator as a real stdio MCP tool:
