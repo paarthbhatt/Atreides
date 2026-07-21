@@ -38,6 +38,14 @@ export const indirectInjectionFixture: Action = {
   ],
 };
 
+export const unprotectedBaseline = {
+  outcome: "simulated_unprotected_execution",
+  action: indirectInjectionFixture,
+  transmitted: false,
+  simulatedOutput: "DEMO_SECRET=[redacted]",
+  explanation: "Without an action boundary, the proposed tool call has no deterministic provenance policy to stop it. This safe baseline never contacts an external service or exposes a real secret.",
+};
+
 function send(response: ServerResponse, status: number, payload: unknown) {
   response.writeHead(status, {
     "content-type": "application/json", "access-control-allow-origin": process.env.ATREIDES_CORS_ORIGIN ?? "*",
@@ -70,6 +78,7 @@ export const server = createServer(async (request, response) => {
   if (!withinRateLimit(request)) return send(response, 429, { error: "Rate limit exceeded." });
   if (request.method === "GET" && url.pathname === "/v1/receipts") return send(response, 200, { receipts: listReceipts(), verification: url.searchParams.get("verify") === "true" ? verifyReceipts() : undefined });
   if (request.method === "GET" && url.pathname === "/v1/policy") return send(response, 200, currentPolicy());
+  if (request.method === "POST" && url.pathname === "/v1/demo/unprotected-indirect-prompt-injection") return send(response, 200, unprotectedBaseline);
   if (request.method === "POST" && url.pathname === "/v1/demo/indirect-prompt-injection") return send(response, 200, { receipt: evaluate(indirectInjectionFixture) });
   if (request.method === "POST" && url.pathname === "/v1/evaluate") {
     let body = ""; for await (const chunk of request) body += chunk;

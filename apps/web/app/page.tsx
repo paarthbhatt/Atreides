@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HeroField } from "./HeroField";
 
 const stages = [
@@ -14,6 +14,8 @@ type Receipt = { decision: string; reason: string; policy: string; policyVersion
 type GatewayHealth = { status: string; policyVersion: string; durableReceipts: boolean; signedReceipts: boolean };
 type ReceiptVerification = { valid: boolean; receipts: number; failures: string[] };
 type LabState = { trust: "trusted" | "untrusted"; sensitivity: "public" | "secret"; destination: "approved" | "external"; writes: boolean };
+type UnsafeBaseline = { outcome: string; transmitted: boolean; simulatedOutput: string; explanation: string };
+type DemoPhase = "ready" | "before" | "after" | "audit" | "error";
 const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL ?? "http://localhost:4100";
 
 export default function Home() {
@@ -27,13 +29,18 @@ export default function Home() {
   const [lab, setLab] = useState<LabState>({ trust: "untrusted", sensitivity: "secret", destination: "external", writes: false });
   const [labReceipt, setLabReceipt] = useState<Receipt | null>(null);
   const [labRunning, setLabRunning] = useState(false);
+  const [baseline, setBaseline] = useState<UnsafeBaseline | null>(null);
+  const [demoPhase, setDemoPhase] = useState<DemoPhase>("ready");
+  const topRef = useRef<HTMLElement>(null);
   const current = stages[stage];
   const blocked = stage === 3;
 
   useEffect(() => {
-    const update = () => setScrolled(window.scrollY > 20);
-    update(); window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    const target = topRef.current;
+    if (!target) return;
+    const observer = new IntersectionObserver(([entry]) => setScrolled(!entry.isIntersecting), { threshold: 0.96 });
+    observer.observe(target);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -47,13 +54,19 @@ export default function Home() {
     return () => controller.abort();
   }, []);
 
-  async function runSafeAttack() {
-    setRunning(true); setGatewayError(null);
+  async function runBeforeAfterProof() {
+    setRunning(true); setGatewayError(null); setVerification(null); setReceipt(null); setBaseline(null); setDemoPhase("before");
     try {
+      const beforeResponse = await fetch(`${gatewayUrl}/v1/demo/unprotected-indirect-prompt-injection`, { method: "POST" });
+      const before = await beforeResponse.json() as UnsafeBaseline & { error?: string };
+      if (!beforeResponse.ok) throw new Error(before.error ?? "Unsafe baseline did not return.");
+      setBaseline(before);
+      setDemoPhase("after");
       const response = await fetch(`${gatewayUrl}/v1/demo/indirect-prompt-injection`, { method: "POST" });
       const payload = await response.json() as { receipt?: Receipt; error?: string };
       if (!response.ok || !payload.receipt) throw new Error(payload.error ?? "Gateway did not return a receipt.");
       setReceipt(payload.receipt); setStage(3);
+      setDemoPhase("audit");
       try {
         const ledger = await fetch(`${gatewayUrl}/v1/receipts?verify=true`);
         if (ledger.ok) {
@@ -62,6 +75,7 @@ export default function Home() {
         }
       } catch { setVerification(null); }
     } catch (error) {
+      setDemoPhase("error");
       setGatewayError(error instanceof Error ? error.message : "Could not reach the gateway.");
     } finally { setRunning(false); }
   }
@@ -84,7 +98,7 @@ export default function Home() {
       <a className="button compact" href="#console">Open demo <b>↗</b></a>
     </nav>
 
-    <section id="top" className="hero grid-bg">
+    <section id="top" ref={topRef} className="hero grid-bg">
       <div className="hero-aurora" aria-hidden="true" />
       <div className="eyebrow"><i /> MCP SECURITY GATEWAY <em>V0.1 / LOCAL DEMO</em></div>
       <div className="hero-copy">
@@ -108,6 +122,14 @@ export default function Home() {
           <footer><span>RECEIPT {blocked ? "e8d7…1af0" : "PENDING"}</span><span>SHA-256 CHAINED</span></footer>
         </div>
       </div>
+      <div className="proof-run" aria-live="polite">
+        <div className={demoPhase === "before" || demoPhase === "after" || demoPhase === "audit" ? "proof-event before active" : "proof-event before"}><span>BEFORE</span><b>Unprotected agent</b><p>{baseline ? `Synthetic output prepared: ${baseline.simulatedOutput}` : "The same indirect instruction reaches a privileged action with no policy boundary."}</p><small>{baseline ? "Safe simulation. No network request or real secret." : "No LLM classification can stop a tool call by itself."}</small></div>
+        <div className="proof-arrow" aria-hidden="true">→</div>
+        <div className={demoPhase === "after" || demoPhase === "audit" ? "proof-event after active" : "proof-event after"}><span>AFTER</span><b>Atreides intercepts</b><p>{receipt ? `Blocked by ${receipt.policy}.` : "The exact action is evaluated before the MCP boundary."}</p><small>Deterministic policy checks provenance, sensitivity, destination, and impact.</small></div>
+        <div className="proof-arrow" aria-hidden="true">→</div>
+        <div className={demoPhase === "audit" && verification?.valid ? "proof-event audit active" : "proof-event audit"}><span>AUDIT</span><b>Trust receipt</b><p>{verification?.valid ? `Hash chain verified across ${verification.receipts} receipt${verification.receipts === 1 ? "" : "s"}.` : "The decision reason and receipt hash are retained for review."}</p><small>{receipt ? `sha256 / ${receipt.hash.slice(0, 18)}…` : "Cryptographic evidence, not a model confidence score."}</small></div>
+      </div>
+      <div className="proof-action"><button className="button proof-button" type="button" onClick={runBeforeAfterProof} disabled={running}>{running ? "Running proof…" : "Run before/after proof"} <b>↗</b></button><div><p>{demoPhase === "error" ? "The live gateway could not complete the proof." : "The baseline is deliberately synthetic. The block and receipt are real gateway results."}</p>{gatewayError && <p className="gateway-error" role="alert">Gateway unavailable: {gatewayError}</p>}</div></div>
       <p className="replay-caption"><span /> Each frame is an auditable transition—not a model guess.</p>
     </section>
 
@@ -128,7 +150,7 @@ export default function Home() {
     </section>
 
     <section id="console" className="console section">
-      <div className="console-copy"><p className="section-index">04 / OPERATOR CONSOLE</p><h2>Every decision is<br />an <span>evidence trail.</span></h2><p>Replay an attempted exploit against the live gateway. Atreides returns an actual policy receipt, with a hash you can inspect.</p><button className="button demo-button" type="button" onClick={runSafeAttack} disabled={running}>{running ? "Running safe attack…" : "Run safe attack"} <b>↗</b></button>{gatewayError && <p className="gateway-error" role="alert">Gateway unavailable: {gatewayError}</p>}</div>
+      <div className="console-copy"><p className="section-index">04 / OPERATOR CONSOLE</p><h2>Every decision is<br />an <span>evidence trail.</span></h2><p>The before/after proof produces a real policy receipt. Inspect its rule, version, integrity state, and hash here.</p><a className="text-link" href="#proof">Run the proof <b>↑</b></a></div>
       <div className="console-window" aria-live="polite"><header><span className="dot red-dot" /><span className="dot" /><span className="dot" /><b>atreides / mission-control</b><span className={health ? "live" : "live offline"}>● {health ? "GATEWAY ONLINE" : "GATEWAY OFFLINE"}</span></header><div className="metrics"><div><small>POLICY VERSION</small><b className="policy-version">{health?.policyVersion ?? "—"}</b><span>versioned policy-as-code</span></div><div><small>BLOCKED CHAINS</small><b className="warning">{receipt ? "04" : "03"}</b><span>{verification?.valid ? `${verification.receipts} receipts verified` : "awaiting proof replay"}</span></div><div><small>RECEIPT MODE</small><b className="receipt-mode">{health?.signedReceipts ? "SIGNED" : "HASHED"}</b><span>{health?.durableReceipts ? "durable ledger" : "ephemeral demo ledger"}</span></div></div><div className="receipt"><div><span className="pill">{receipt?.decision?.toUpperCase() ?? "READY"}</span><b>{receipt ? "External context attempted secret egress" : "Run the safe fixture to obtain a live receipt"}</b><small>{receipt ? `policy / ${receipt.policy} · v${receipt.policyVersion}` : "gateway / waiting for replay"}</small>{receipt && <code title={receipt.hash}>sha256 / {receipt.hash.slice(0, 16)}…</code>}</div><span className="check">{verification?.valid ? "✓" : "○"}</span></div>{receipt && <p className="receipt-reason">{receipt.reason}</p>}{verification && <p className={verification.valid ? "verification valid" : "verification invalid"}>{verification.valid ? `Chain integrity verified across ${verification.receipts} receipt${verification.receipts === 1 ? "" : "s"}.` : verification.failures.join(" ")}</p>}</div>
     </section>
     <footer><span>ATREIDES / SECURITY BY PROOF</span><span>BUILT FOR THE MCP ERA</span><span>© 2026</span></footer>

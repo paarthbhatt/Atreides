@@ -69,6 +69,16 @@ curl -X POST http://localhost:4100/v1/demo/indirect-prompt-injection
 
 The response is a `block` receipt under `atreides/no-untrusted-secret-egress`. The fixture uses only fake local data and `attacker.invalid`; it does not contact an external service.
 
+### Judge demo: the same attack, before and after
+
+Open the product at `http://localhost:3000` and select **Run before/after proof**. The experience shows one constant action in three parts:
+
+1. **Before** - a clearly labelled, network-safe simulation of an unprotected agent preparing synthetic secret-labelled output for an unapproved destination.
+2. **After** - the exact action is sent to the live Atreides gateway and blocked by `atreides/no-untrusted-secret-egress`, before an MCP tool call is allowed to execute.
+3. **Audit** - the live receipt chain is verified, exposing the policy, reason, version, and SHA-256 evidence.
+
+The baseline endpoint deliberately does not invoke an LLM, transmit any data, or expose a real secret. It demonstrates the missing action boundary. The Atreides decision and receipt verification are real gateway operations.
+
 ## MCP integration
 
 Atreides also exposes the policy evaluator as a real stdio MCP tool:
@@ -142,6 +152,7 @@ The controlled demo's approved destinations are `internal://diagnostics` and `ht
 
 - `GET /health` — gateway status
 - `GET /v1/receipts?verify=true` — receipt ledger plus hash-chain integrity verification
+- `POST /v1/demo/unprotected-indirect-prompt-injection` — synthetic, network-safe baseline with no enforcement boundary
 - `POST /v1/demo/indirect-prompt-injection` — safe red-team fixture
 - `POST /v1/evaluate` — evaluate an action payload
 - `GET /v1/policy` — active versioned policy bundle

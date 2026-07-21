@@ -23,12 +23,12 @@ This prototype is a pre-execution evaluator and stdio MCP broker, not a universa
 
 ## Suggested video script (≤3 minutes)
 
-1. **0:00–0:20 — Problem:** “An agent can read untrusted text, then translate it into a real tool action.”
-2. **0:20–0:55 — Vulnerable path:** Show the issue fixture’s provenance and the proposed fake secret-egress action.
-3. **0:55–1:35 — Enforcement:** Use the wrapped `filesystem.read_secret` fixture or the HTTP fixture; show that policy blocks before the fixture executes, with a named receipt policy.
-4. **1:35–2:10 — Evidence:** Show previous hash/hash, explanation, and the receipt ledger.
-5. **2:10–2:35 — Developer fit:** Show the short stdio MCP configuration and `evaluate_agent_action` schema.
-6. **2:35–3:00 — Difference:** “Atreides governs actions based on provenance and capability; it does not guess from prompt wording.”
+1. **0:00-0:20 - Before:** “The same indirect instruction reaches a privileged action. In an unprotected agent, there is no deterministic boundary between untrusted context and an outbound tool call.” Run the clearly labelled synthetic baseline. State that it never sends data.
+2. **0:20-1:00 - After:** Run **Run before/after proof**. Show the same secret-labelled external action being blocked under `atreides/no-untrusted-secret-egress` before execution. Say: “This decision is independent of an LLM deciding whether the prompt looked suspicious.”
+3. **1:00-1:35 - Audit:** Pause on the actual policy name, reason, version, SHA-256 receipt, and live hash-chain verification. Explain that this establishes why the action was denied.
+4. **1:35-2:15 - Developer fit:** Show the protected upstream MCP reference server, then the blocked and allowed tests. Explain that Atreides discovers and guards a real stdio upstream process.
+5. **2:15-2:45 - Policy lab:** Change a fact in the live policy laboratory and evaluate it. This demonstrates deterministic policy-as-code rather than one hard-coded demo path.
+6. **2:45-3:00 - Difference:** “Atreides governs whether provenance can authorize capability. It does not guess from prompt wording.”
 
 ## Codex / GPT-5.6 disclosure
 

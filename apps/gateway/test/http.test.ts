@@ -13,6 +13,13 @@ test("serves health, evaluates the safe attack fixture, and exposes its receipt"
     assert.equal(health.status, 200);
     assert.equal((await health.json() as { status: string }).status, "ok");
 
+    const baseline = await fetch(`${baseUrl}/v1/demo/unprotected-indirect-prompt-injection`, { method: "POST" });
+    assert.equal(baseline.status, 200);
+    const baselinePayload = await baseline.json() as { outcome: string; transmitted: boolean; action: { destination: string } };
+    assert.equal(baselinePayload.outcome, "simulated_unprotected_execution");
+    assert.equal(baselinePayload.transmitted, false);
+    assert.equal(baselinePayload.action.destination, "https://attacker.invalid/collect");
+
     const replay = await fetch(`${baseUrl}/v1/demo/indirect-prompt-injection`, { method: "POST" });
     assert.equal(replay.status, 200);
     const receipt = (await replay.json() as { receipt: { id: string; decision: string; hash: string } }).receipt;
