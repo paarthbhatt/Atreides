@@ -1,29 +1,71 @@
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import { classifySensitivity, classifyTrust, resolveCapability } from "./capability.js";
 import { ReceiptLedger, hashReceipt, type ReceiptSignature } from "./ledger.js";
-import { PolicyEngine } from "./policy.js";
+import { PolicyEngine, type PolicyDecision } from "./policy.js";
 
 export type Trust = "trusted" | "external" | "untrusted";
 export type Sensitivity = "public" | "internal" | "confidential" | "secret";
 export type Decision = "allow" | "block" | "approval_required";
 export type ContextEnvelope = { source: string; trust: Trust; sensitivity: Sensitivity; contentHash?: string };
-export type Action = { tool: string; destination?: string; writes?: boolean; context: ContextEnvelope[]; actor?: { id: string; role?: string } };
+export type Actor = { id: string; role?: string; scopes?: string[] };
+export type Action = { tool: string; destination?: string; writes?: boolean; context: ContextEnvelope[]; actor?: Actor };
 export type Receipt = { id: string; timestamp: string; decision: Decision; reason: string; policy: string; policyVersion: string; action: Action; previousHash: string | null; hash: string; signature?: ReceiptSignature };
+
+// Scope required to authorize a scope-gated protected capability (F5). It is
+// never satisfied by a self-claimed trust label; it must be a real actor scope.
+const SECRET_READ_SCOPE = "secret:read";
 
 const policy = new PolicyEngine();
 const ledger = new ReceiptLedger({ path: process.env.ATREIDES_RECEIPT_PATH, signingKey: process.env.ATREIDES_RECEIPT_SIGNING_KEY, signingKeyId: process.env.ATREIDES_RECEIPT_SIGNING_KEY_ID });
 const rateWindows = new Map<string, { count: number; startedAt: number }>();
 
-export function evaluate(action: Action): Receipt {
-  const decision = policy.evaluate(action);
+function record(action: Action, outcome: PolicyDecision): Receipt {
   const base: Omit<Receipt, "hash" | "signature"> = {
-    id: randomUUID(), timestamp: new Date().toISOString(), decision: decision.decision, reason: decision.reason,
-    policy: decision.id, policyVersion: policy.bundle.version, action, previousHash: ledger.previousHash,
+    id: randomUUID(), timestamp: new Date().toISOString(), decision: outcome.decision, reason: outcome.reason,
+    policy: outcome.id, policyVersion: policy.bundle.version, action, previousHash: ledger.previousHash,
   };
   const hash = hashReceipt({ ...base, hash: "" });
   const receipt: Receipt = { ...base, hash, signature: ledger.sign(hash) };
   ledger.append(receipt);
   return receipt;
+}
+
+// Record a pre-policy rejection (schema violation, conflicting destination)
+// as a real hash-chained receipt so a deny is as auditable as an allow.
+export function reject(action: Action, id: string, reason: string, decision: Decision = "block"): Receipt {
+  return record(action, { id, decision, reason });
+}
+
+function actorHasSecretScope(actor: Actor | undefined): boolean {
+  return Array.isArray(actor?.scopes) && actor.scopes.includes(SECRET_READ_SCOPE);
+}
+
+// Pure authorization decision for an action: resolves the canonical capability
+// (F1), reclassifies caller-asserted trust and sensitivity against the trusted
+// registries (F7), runs the policy bundle, and applies the scope gate (F5). It
+// records nothing, so a caller can reconcile other pre-execution checks before
+// a single receipt is written.
+export function decide(action: Action): PolicyDecision {
+  const capability = resolveCapability(action.tool);
+  const effective: Action = {
+    ...action,
+    tool: capability.id,
+    context: action.context.map((item) => ({
+      ...item,
+      trust: classifyTrust(item.source, item.trust),
+      sensitivity: classifySensitivity(item.source, item.sensitivity),
+    })),
+  };
+  const outcome = policy.evaluate(effective);
+  if (outcome.decision === "allow" && capability.scopeGated && !actorHasSecretScope(action.actor)) {
+    return { id: "atreides/insufficient-scope", decision: "block", reason: "A scope-gated capability requires an authenticated actor holding the secret-read scope." };
+  }
+  return outcome;
+}
+
+export function evaluate(action: Action): Receipt {
+  return record(action, decide(action));
 }
 
 export function listReceipts() { return ledger.list(); }
@@ -57,7 +99,11 @@ function send(response: ServerResponse, status: number, payload: unknown) {
 function authorized(request: IncomingMessage) {
   const token = process.env.ATREIDES_API_TOKEN;
   if (!token) return true;
-  const received = request.headers.authorization?.replace(/^Bearer\s+/i, "") ?? "";
+  // F6: require an exact `Bearer <non-empty-token>` header. A bare token with
+  // no scheme is rejected; the constant-time comparison runs only after parse.
+  const match = /^Bearer\s+(\S.*)$/i.exec(request.headers.authorization ?? "");
+  if (!match) return false;
+  const received = match[1];
   return received.length === token.length && timingSafeEqual(Buffer.from(received), Buffer.from(token));
 }
 

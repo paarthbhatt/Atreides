@@ -1,6 +1,6 @@
 Atreides authorization edge-case run
 Work order date: 2026-10-11
-Started: 2026-10-10T22:44:45.735Z
+Started: 2026-10-11T13:22:52.025Z
 Node: v22.23.2
 Platform: linux/x64
 Root: /home/batman/company/intel/epimetheus-red/engines/Atreides/
@@ -18,61 +18,61 @@ TAP version 13
 # Subtest: serves health, evaluates the safe attack fixture, and exposes its receipt
 ok 1 - serves health, evaluates the safe attack fixture, and exposes its receipt
   ---
-  duration_ms: 162.379623
+  duration_ms: 83.137201
   type: 'test'
   ...
 # Subtest: persists, signs, and verifies a receipt chain
 ok 2 - persists, signs, and verifies a receipt chain
   ---
-  duration_ms: 10.194358
+  duration_ms: 5.98416
   type: 'test'
   ...
 # Subtest: blocks indirect injection attempting secret egress
 ok 3 - blocks indirect injection attempting secret egress
   ---
-  duration_ms: 6.487882
+  duration_ms: 3.951979
   type: 'test'
   ...
 # Subtest: protects a standard reference MCP workspace server before execution
 ok 4 - protects a standard reference MCP workspace server before execution
   ---
-  duration_ms: 149.182716
+  duration_ms: 60.243503
   type: 'test'
   ...
 # Subtest: blocks an upstream call before it reaches the discovered tool
 ok 5 - blocks an upstream call before it reaches the discovered tool
   ---
-  duration_ms: 6.835332
+  duration_ms: 4.688779
   type: 'test'
   ...
 # Subtest: forwards an allowed upstream call after policy evaluation
 ok 6 - forwards an allowed upstream call after policy evaluation
   ---
-  duration_ms: 3.229163
+  duration_ms: 1.680423
   type: 'test'
   ...
 # Subtest: discovers and calls a real stdio MCP upstream
 ok 7 - discovers and calls a real stdio MCP upstream
   ---
-  duration_ms: 140.155871
+  duration_ms: 62.676736
   type: 'test'
   ...
 # Subtest: discovers the controlled upstream tool manifest
 ok 8 - discovers the controlled upstream tool manifest
   ---
-  duration_ms: 2.990245
+  duration_ms: 1.227943
   type: 'test'
   ...
 # Subtest: enforces policy before a simulated secret read
 ok 9 - enforces policy before a simulated secret read
   ---
-  duration_ms: 5.190543
+  duration_ms: 2.191794
   type: 'test'
   ...
 # Subtest: forwards a benign public read after policy allows it
 ok 10 - forwards a benign public read after policy allows it
   ---
-  duration_ms: 1.224121
+  duration_ms: 0.491834
   type: 'test'
   ...
 1..10
@@ -83,7 +83,7 @@ ok 10 - forwards a benign public read after policy allows it
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 990.974452
+# duration_ms 555.698596
 
 EXIT STATUS: 0
 
@@ -92,104 +92,53 @@ TAP version 13
 # Subtest: fixture matrix is complete, unique, and declares every expected outcome
 ok 1 - fixture matrix is complete, unique, and declares every expected outcome
   ---
-  duration_ms: 4.353277
+  duration_ms: 2.462048
   type: 'test'
   ...
 # Subtest: A-01 aliasing: Exact protected secret-read name
 ok 2 - A-01 aliasing: Exact protected secret-read name
   ---
-  duration_ms: 54.387223
+  duration_ms: 47.697173
   type: 'test'
   ...
 # A-01: expected=deny/block; observed=deny/block; upstream calls=0
 # AUTHZ_CASE eyJpZCI6IkEtMDEiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJFeGFjdCBwcm90ZWN0ZWQgc2VjcmV0LXJlYWQgbmFtZSIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsImV4cGVjdGVkUmF3IjoiYmxvY2siLCJzZXZlcml0eSI6ImhpZ2giLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiYmxvY2siLCJleGVjdXRlZCI6ZmFsc2UsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvbm8tdW50cnVzdGVkLXNlY3JldC1yZWFkIn0=
 # Subtest: A-02 aliasing: Discovered uppercase alias of the same secret capability
-not ok 3 - A-02 aliasing: Discovered uppercase alias of the same secret capability
+ok 3 - A-02 aliasing: Discovered uppercase alias of the same secret capability
   ---
-  duration_ms: 51.659809
+  duration_ms: 42.960053
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    A-02: unexpected allow; F1
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# A-02: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkEtMDIiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJEaXNjb3ZlcmVkIHVwcGVyY2FzZSBhbGlhcyBvZiB0aGUgc2FtZSBzZWNyZXQgY2FwYWJpbGl0eSIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMSIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJGSUxFU1lTVEVNLlJFQURfU0VDUkVUIiwiYXJndW1lbnRzIjp7fSwiZWZmZWN0Ijoic3ludGhldGljLXNlY3JldC1yZWFkIn1dLCJwb2xpY3kiOiJhdHJlaWRlcy9kZWZhdWx0LWFsbG93In0=
+# A-02: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkEtMDIiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJEaXNjb3ZlcmVkIHVwcGVyY2FzZSBhbGlhcyBvZiB0aGUgc2FtZSBzZWNyZXQgY2FwYWJpbGl0eSIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMSIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9uby11bnRydXN0ZWQtc2VjcmV0LXJlYWQifQ==
 # Subtest: A-03 aliasing: Discovered noncanonical path alias of the secret capability
-not ok 4 - A-03 aliasing: Discovered noncanonical path alias of the secret capability
+ok 4 - A-03 aliasing: Discovered noncanonical path alias of the secret capability
   ---
-  duration_ms: 43.144333
+  duration_ms: 48.224145
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    A-03: unexpected allow; F1
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# A-03: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkEtMDMiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJEaXNjb3ZlcmVkIG5vbmNhbm9uaWNhbCBwYXRoIGFsaWFzIG9mIHRoZSBzZWNyZXQgY2FwYWJpbGl0eSIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMSIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJmaWxlc3lzdGVtLy4uL3JlYWRfc2VjcmV0IiwiYXJndW1lbnRzIjp7fSwiZWZmZWN0Ijoic3ludGhldGljLXNlY3JldC1yZWFkIn1dLCJwb2xpY3kiOiJhdHJlaWRlcy9kZWZhdWx0LWFsbG93In0=
+# A-03: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkEtMDMiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJEaXNjb3ZlcmVkIG5vbmNhbm9uaWNhbCBwYXRoIGFsaWFzIG9mIHRoZSBzZWNyZXQgY2FwYWJpbGl0eSIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMSIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9uby11bnRydXN0ZWQtc2VjcmV0LXJlYWQifQ==
 # Subtest: A-04 aliasing: Undiscovered trailing-space name
 ok 5 - A-04 aliasing: Undiscovered trailing-space name
   ---
-  duration_ms: 43.675146
+  duration_ms: 48.148281
   type: 'test'
   ...
 # A-04: expected=deny/unknown-tool; observed=deny/unknown-tool; upstream calls=0
 # AUTHZ_CASE eyJpZCI6IkEtMDQiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJVbmRpc2NvdmVyZWQgdHJhaWxpbmctc3BhY2UgbmFtZSIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsImV4cGVjdGVkUmF3IjoidW5rbm93bi10b29sIiwic2V2ZXJpdHkiOiJtZWRpdW0iLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoidW5rbm93bi10b29sIiwiZXhlY3V0ZWQiOmZhbHNlLCJjYWxscyI6W10sImRldGFpbCI6IlVwc3RyZWFtIHRvb2wgJ2ZpbGVzeXN0ZW0ucmVhZF9zZWNyZXQgJyB3YXMgbm90IGRpc2NvdmVyZWQuIn0=
 # Subtest: A-05 aliasing: Discovered alternate name fs.read_secret
-not ok 6 - A-05 aliasing: Discovered alternate name fs.read_secret
+ok 6 - A-05 aliasing: Discovered alternate name fs.read_secret
   ---
-  duration_ms: 44.807746
+  duration_ms: 38.261045
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    A-05: unexpected allow; F1
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# A-05: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkEtMDUiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJEaXNjb3ZlcmVkIGFsdGVybmF0ZSBuYW1lIGZzLnJlYWRfc2VjcmV0Iiwic3VyZmFjZSI6InByb3h5IiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJoaWdoIiwiZmluZGluZyI6IkYxIiwic3RhdHVzIjoiRkFJTCIsIm9ic2VydmVkIjoiYWxsb3ciLCJyYXciOiJhbGxvdyIsImV4ZWN1dGVkIjp0cnVlLCJjYWxscyI6W3sibmFtZSI6ImZzLnJlYWRfc2VjcmV0IiwiYXJndW1lbnRzIjp7fSwiZWZmZWN0Ijoic3ludGhldGljLXNlY3JldC1yZWFkIn1dLCJwb2xpY3kiOiJhdHJlaWRlcy9kZWZhdWx0LWFsbG93In0=
+# A-05: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkEtMDUiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJEaXNjb3ZlcmVkIGFsdGVybmF0ZSBuYW1lIGZzLnJlYWRfc2VjcmV0Iiwic3VyZmFjZSI6InByb3h5IiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJoaWdoIiwiZmluZGluZyI6IkYxIiwic3RhdHVzIjoiUEFTUyIsIm9ic2VydmVkIjoiZGVueSIsInJhdyI6ImJsb2NrIiwiZXhlY3V0ZWQiOmZhbHNlLCJjYWxscyI6W10sInBvbGljeSI6ImF0cmVpZGVzL25vLXVudHJ1c3RlZC1zZWNyZXQtcmVhZCJ9
 # Subtest: A-06 aliasing: Controlled wrapper rejects an uppercase alias
 ok 7 - A-06 aliasing: Controlled wrapper rejects an uppercase alias
   ---
-  duration_ms: 581.828734
+  duration_ms: 490.576
   type: 'test'
   ...
 # A-06: expected=deny/input-error; observed=deny/input-error; upstream calls=0
@@ -197,7 +146,7 @@ ok 7 - A-06 aliasing: Controlled wrapper rejects an uppercase alias
 # Subtest: A-07 aliasing: Exact approved destination permits a public egress
 ok 8 - A-07 aliasing: Exact approved destination permits a public egress
   ---
-  duration_ms: 47.036387
+  duration_ms: 40.29524
   type: 'test'
   ...
 # A-07: expected=allow/allow; observed=allow/allow; upstream calls=1
@@ -205,7 +154,7 @@ ok 8 - A-07 aliasing: Exact approved destination permits a public egress
 # Subtest: A-08 aliasing: Approved-host prefix with an attacker suffix
 ok 9 - A-08 aliasing: Approved-host prefix with an attacker suffix
   ---
-  duration_ms: 49.149793
+  duration_ms: 37.573087
   type: 'test'
   ...
 # A-08: expected=deny/block; observed=deny/block; upstream calls=0
@@ -213,115 +162,47 @@ ok 9 - A-08 aliasing: Approved-host prefix with an attacker suffix
 # Subtest: A-09 aliasing: Approved hostname in URL userinfo
 ok 10 - A-09 aliasing: Approved hostname in URL userinfo
   ---
-  duration_ms: 43.07312
+  duration_ms: 37.475101
   type: 'test'
   ...
 # A-09: expected=deny/block; observed=deny/block; upstream calls=0
 # AUTHZ_CASE eyJpZCI6IkEtMDkiLCJjYXRlZ29yeSI6ImFsaWFzaW5nIiwidGl0bGUiOiJBcHByb3ZlZCBob3N0bmFtZSBpbiBVUkwgdXNlcmluZm8iLCJzdXJmYWNlIjoicHJveHkiLCJleHBlY3RlZCI6ImRlbnkiLCJleHBlY3RlZFJhdyI6ImJsb2NrIiwic2V2ZXJpdHkiOiJoaWdoIiwic3RhdHVzIjoiUEFTUyIsIm9ic2VydmVkIjoiZGVueSIsInJhdyI6ImJsb2NrIiwiZXhlY3V0ZWQiOmZhbHNlLCJjYWxscyI6W10sInBvbGljeSI6ImF0cmVpZGVzL25vLXVudHJ1c3RlZC1zZWNyZXQtZWdyZXNzIn0=
 # Subtest: B-01 smuggling: Extra includeSecret key on a strictly declared public read
-not ok 11 - B-01 smuggling: Extra includeSecret key on a strictly declared public read
+ok 11 - B-01 smuggling: Extra includeSecret key on a strictly declared public read
   ---
-  duration_ms: 45.257017
+  duration_ms: 36.987044
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    B-01: unexpected allow; F2
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# B-01: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkItMDEiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiRXh0cmEgaW5jbHVkZVNlY3JldCBrZXkgb24gYSBzdHJpY3RseSBkZWNsYXJlZCBwdWJsaWMgcmVhZCIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJ3b3Jrc3BhY2UucmVhZF9wdWJsaWNfYnJpZWYiLCJhcmd1bWVudHMiOnsiaW5jbHVkZVNlY3JldCI6dHJ1ZX0sImVmZmVjdCI6InN5bnRoZXRpYy1zZWNyZXQtcmVhZCJ9XSwicG9saWN5IjoiYXRyZWlkZXMvZGVmYXVsdC1hbGxvdyJ9
+# B-01: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkItMDEiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiRXh0cmEgaW5jbHVkZVNlY3JldCBrZXkgb24gYSBzdHJpY3RseSBkZWNsYXJlZCBwdWJsaWMgcmVhZCIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9zY2hlbWEtdmlvbGF0aW9uIn0=
 # Subtest: B-02 smuggling: Nested file selector smuggles a synthetic .env read
-not ok 12 - B-02 smuggling: Nested file selector smuggles a synthetic .env read
+ok 12 - B-02 smuggling: Nested file selector smuggles a synthetic .env read
   ---
-  duration_ms: 555.565276
+  duration_ms: 466.909166
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    B-02: unexpected allow; F2
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# B-02: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkItMDIiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiTmVzdGVkIGZpbGUgc2VsZWN0b3Igc211Z2dsZXMgYSBzeW50aGV0aWMgLmVudiByZWFkIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJ3b3Jrc3BhY2UucmVhZF9wdWJsaWNfYnJpZWYiLCJhcmd1bWVudHMiOnsib3B0aW9ucyI6eyJwYXRoIjoiLmVudiJ9fSwiZWZmZWN0Ijoic3ludGhldGljLXNlY3JldC1yZWFkIn1dLCJwb2xpY3kiOiJhdHJlaWRlcy9kZWZhdWx0LWFsbG93In0=
+# B-02: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkItMDIiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiTmVzdGVkIGZpbGUgc2VsZWN0b3Igc211Z2dsZXMgYSBzeW50aGV0aWMgLmVudiByZWFkIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9zY2hlbWEtdmlvbGF0aW9uIn0=
 # Subtest: B-03 smuggling: Argument destination disagrees with approved envelope metadata
-not ok 13 - B-03 smuggling: Argument destination disagrees with approved envelope metadata
+ok 13 - B-03 smuggling: Argument destination disagrees with approved envelope metadata
   ---
-  duration_ms: 542.685013
+  duration_ms: 456.713611
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    B-03: unexpected allow; F3
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# B-03: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkItMDMiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiQXJndW1lbnQgZGVzdGluYXRpb24gZGlzYWdyZWVzIHdpdGggYXBwcm92ZWQgZW52ZWxvcGUgbWV0YWRhdGEiLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJjcml0aWNhbCIsImZpbmRpbmciOiJGMyIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJkaWFnbm9zdGljcy5kaXNwYXRjaCIsImFyZ3VtZW50cyI6eyJkZXN0aW5hdGlvbiI6Imh0dHBzOi8vYXR0YWNrZXIuaW52YWxpZC9jb2xsZWN0IiwicGF5bG9hZCI6InN5bnRoZXRpYy1zZWNyZXQifSwiZWZmZWN0Ijoic3ludGhldGljLWVncmVzcyJ9XSwicG9saWN5IjoiYXRyZWlkZXMvZGVmYXVsdC1hbGxvdyJ9
+# B-03: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkItMDMiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiQXJndW1lbnQgZGVzdGluYXRpb24gZGlzYWdyZWVzIHdpdGggYXBwcm92ZWQgZW52ZWxvcGUgbWV0YWRhdGEiLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJjcml0aWNhbCIsImZpbmRpbmciOiJGMyIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9jb25mbGljdGluZy1kZXN0aW5hdGlvbiJ9
 # Subtest: B-04 smuggling: writes=false overrides the discovered destructive annotation
-not ok 14 - B-04 smuggling: writes=false overrides the discovered destructive annotation
+ok 14 - B-04 smuggling: writes=false overrides the discovered destructive annotation
   ---
-  duration_ms: 571.60983
+  duration_ms: 460.311472
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    B-04: unexpected allow; F4
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# B-04: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkItMDQiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoid3JpdGVzPWZhbHNlIG92ZXJyaWRlcyB0aGUgZGlzY292ZXJlZCBkZXN0cnVjdGl2ZSBhbm5vdGF0aW9uIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiY3JpdGljYWwiLCJmaW5kaW5nIjoiRjQiLCJzdGF0dXMiOiJGQUlMIiwib2JzZXJ2ZWQiOiJhbGxvdyIsInJhdyI6ImFsbG93IiwiZXhlY3V0ZWQiOnRydWUsImNhbGxzIjpbeyJuYW1lIjoid29ya3NwYWNlLnB1Ymxpc2hfcmVsZWFzZV9ub3RlcyIsImFyZ3VtZW50cyI6eyJib2R5Ijoic3ludGhldGljIHJlbGVhc2Ugbm90ZXMifSwiZWZmZWN0Ijoic3ludGhldGljLXB1Ymxpc2gifV0sInBvbGljeSI6ImF0cmVpZGVzL2RlZmF1bHQtYWxsb3cifQ==
+# B-04: expected=deny; observed=deny/approval_required; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkItMDQiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoid3JpdGVzPWZhbHNlIG92ZXJyaWRlcyB0aGUgZGlzY292ZXJlZCBkZXN0cnVjdGl2ZSBhbm5vdGF0aW9uIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiY3JpdGljYWwiLCJmaW5kaW5nIjoiRjQiLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiYXBwcm92YWxfcmVxdWlyZWQiLCJleGVjdXRlZCI6ZmFsc2UsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvdW50cnVzdGVkLWhpZ2gtaW1wYWN0LWFjdGlvbiJ9
 # Subtest: B-05 smuggling: Omitted writes respects the discovered destructive annotation
 ok 15 - B-05 smuggling: Omitted writes respects the discovered destructive annotation
   ---
-  duration_ms: 45.166339
+  duration_ms: 41.096571
   type: 'test'
   ...
 # B-05: expected=deny/approval_required; observed=deny/approval_required; upstream calls=0
@@ -329,7 +210,7 @@ ok 15 - B-05 smuggling: Omitted writes respects the discovered destructive annot
 # Subtest: B-06 smuggling: Explicit writes=true cannot lower the impact of a public read
 ok 16 - B-06 smuggling: Explicit writes=true cannot lower the impact of a public read
   ---
-  duration_ms: 48.074332
+  duration_ms: 38.64826
   type: 'test'
   ...
 # B-06: expected=deny/approval_required; observed=deny/approval_required; upstream calls=0
@@ -337,7 +218,7 @@ ok 16 - B-06 smuggling: Explicit writes=true cannot lower the impact of a public
 # Subtest: B-07 smuggling: Top-level arguments array fails the MCP record schema
 ok 17 - B-07 smuggling: Top-level arguments array fails the MCP record schema
   ---
-  duration_ms: 560.435604
+  duration_ms: 437.660873
   type: 'test'
   ...
 # B-07: expected=deny/input-error; observed=deny/input-error; upstream calls=0
@@ -345,7 +226,7 @@ ok 17 - B-07 smuggling: Top-level arguments array fails the MCP record schema
 # Subtest: B-08 smuggling: String false fails the MCP boolean schema
 ok 18 - B-08 smuggling: String false fails the MCP boolean schema
   ---
-  duration_ms: 647.825066
+  duration_ms: 450.008238
   type: 'test'
   ...
 # B-08: expected=deny/input-error; observed=deny/input-error; upstream calls=0
@@ -353,40 +234,23 @@ ok 18 - B-08 smuggling: String false fails the MCP boolean schema
 # Subtest: B-09 smuggling: Valid array-of-objects payload
 ok 19 - B-09 smuggling: Valid array-of-objects payload
   ---
-  duration_ms: 610.458937
+  duration_ms: 455.826299
   type: 'test'
   ...
 # B-09: expected=allow/allow; observed=allow/allow; upstream calls=1
 # AUTHZ_CASE eyJpZCI6IkItMDkiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiVmFsaWQgYXJyYXktb2Ytb2JqZWN0cyBwYXlsb2FkIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiYWxsb3ciLCJleHBlY3RlZFJhdyI6ImFsbG93Iiwic2V2ZXJpdHkiOiJub25lIiwic3RhdHVzIjoiUEFTUyIsIm9ic2VydmVkIjoiYWxsb3ciLCJyYXciOiJhbGxvdyIsImV4ZWN1dGVkIjp0cnVlLCJjYWxscyI6W3sibmFtZSI6InJlY29yZHMucHJvY2VzcyIsImFyZ3VtZW50cyI6eyJyZWNvcmRzIjpbeyJuYW1lIjoicHVibGljIiwidmFsdWUiOiJzeW50aGV0aWMifV19LCJlZmZlY3QiOiJzeW50aGV0aWMtcmVjb3JkcyJ9XSwicG9saWN5IjoiYXRyZWlkZXMvZGVmYXVsdC1hbGxvdyJ9
 # Subtest: B-10 smuggling: Object-of-arrays substitutes for the declared array-of-objects
-not ok 20 - B-10 smuggling: Object-of-arrays substitutes for the declared array-of-objects
+ok 20 - B-10 smuggling: Object-of-arrays substitutes for the declared array-of-objects
   ---
-  duration_ms: 578.118404
+  duration_ms: 442.300615
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    B-10: unexpected allow; F2
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# B-10: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkItMTAiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiT2JqZWN0LW9mLWFycmF5cyBzdWJzdGl0dXRlcyBmb3IgdGhlIGRlY2xhcmVkIGFycmF5LW9mLW9iamVjdHMiLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJtZWRpdW0iLCJmaW5kaW5nIjoiRjIiLCJzdGF0dXMiOiJGQUlMIiwib2JzZXJ2ZWQiOiJhbGxvdyIsInJhdyI6ImFsbG93IiwiZXhlY3V0ZWQiOnRydWUsImNhbGxzIjpbeyJuYW1lIjoicmVjb3Jkcy5wcm9jZXNzIiwiYXJndW1lbnRzIjp7InJlY29yZHMiOnsibmFtZSI6WyJzZWNyZXQiXSwidmFsdWUiOlsic3ludGhldGljIl19fSwiZWZmZWN0Ijoic3ludGhldGljLXJlY29yZHMifV0sInBvbGljeSI6ImF0cmVpZGVzL2RlZmF1bHQtYWxsb3cifQ==
+# B-10: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkItMTAiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiT2JqZWN0LW9mLWFycmF5cyBzdWJzdGl0dXRlcyBmb3IgdGhlIGRlY2xhcmVkIGFycmF5LW9mLW9iamVjdHMiLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJtZWRpdW0iLCJmaW5kaW5nIjoiRjIiLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiYmxvY2siLCJleGVjdXRlZCI6ZmFsc2UsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvc2NoZW1hLXZpb2xhdGlvbiJ9
 # Subtest: B-11 smuggling: Extra writes=false cannot override the controlled wrapper
 ok 21 - B-11 smuggling: Extra writes=false cannot override the controlled wrapper
   ---
-  duration_ms: 676.860783
+  duration_ms: 448.957791
   type: 'test'
   ...
 # B-11: expected=deny/block; observed=deny/block; upstream calls=0
@@ -394,140 +258,55 @@ ok 21 - B-11 smuggling: Extra writes=false cannot override the controlled wrappe
 # Subtest: B-12 smuggling: Valid public read with untrusted provenance
 ok 22 - B-12 smuggling: Valid public read with untrusted provenance
   ---
-  duration_ms: 45.016383
+  duration_ms: 39.506107
   type: 'test'
   ...
 # B-12: expected=allow/allow; observed=allow/allow; upstream calls=1
 # AUTHZ_CASE eyJpZCI6IkItMTIiLCJjYXRlZ29yeSI6InNtdWdnbGluZyIsInRpdGxlIjoiVmFsaWQgcHVibGljIHJlYWQgd2l0aCB1bnRydXN0ZWQgcHJvdmVuYW5jZSIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiYWxsb3ciLCJleHBlY3RlZFJhdyI6ImFsbG93Iiwic2V2ZXJpdHkiOiJub25lIiwic3RhdHVzIjoiUEFTUyIsIm9ic2VydmVkIjoiYWxsb3ciLCJyYXciOiJhbGxvdyIsImV4ZWN1dGVkIjp0cnVlLCJjYWxscyI6W3sibmFtZSI6IndvcmtzcGFjZS5yZWFkX3B1YmxpY19icmllZiIsImFyZ3VtZW50cyI6e30sImVmZmVjdCI6InB1YmxpYy1yZWFkIn1dLCJwb2xpY3kiOiJhdHJlaWRlcy9kZWZhdWx0LWFsbG93In0=
 # Subtest: C-01 schema: Numeric body violates the discovered string schema
-not ok 23 - C-01 schema: Numeric body violates the discovered string schema
+ok 23 - C-01 schema: Numeric body violates the discovered string schema
   ---
-  duration_ms: 48.192748
+  duration_ms: 38.895747
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    C-01: unexpected allow; F2
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# C-01: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkMtMDEiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiTnVtZXJpYyBib2R5IHZpb2xhdGVzIHRoZSBkaXNjb3ZlcmVkIHN0cmluZyBzY2hlbWEiLCJzdXJmYWNlIjoicHJveHkiLCJleHBlY3RlZCI6ImRlbnkiLCJzZXZlcml0eSI6ImhpZ2giLCJmaW5kaW5nIjoiRjIiLCJzdGF0dXMiOiJGQUlMIiwib2JzZXJ2ZWQiOiJhbGxvdyIsInJhdyI6ImFsbG93IiwiZXhlY3V0ZWQiOnRydWUsImNhbGxzIjpbeyJuYW1lIjoid29ya3NwYWNlLnB1Ymxpc2hfcmVsZWFzZV9ub3RlcyIsImFyZ3VtZW50cyI6eyJib2R5Ijo0Mn0sImVmZmVjdCI6InN5bnRoZXRpYy1wdWJsaXNoIn1dLCJwb2xpY3kiOiJhdHJlaWRlcy9kZWZhdWx0LWFsbG93In0=
+# C-01: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkMtMDEiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiTnVtZXJpYyBib2R5IHZpb2xhdGVzIHRoZSBkaXNjb3ZlcmVkIHN0cmluZyBzY2hlbWEiLCJzdXJmYWNlIjoicHJveHkiLCJleHBlY3RlZCI6ImRlbnkiLCJzZXZlcml0eSI6ImhpZ2giLCJmaW5kaW5nIjoiRjIiLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiYmxvY2siLCJleGVjdXRlZCI6ZmFsc2UsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvc2NoZW1hLXZpb2xhdGlvbiJ9
 # Subtest: C-02 schema: Undeclared secret key violates additionalProperties=false
-not ok 24 - C-02 schema: Undeclared secret key violates additionalProperties=false
+ok 24 - C-02 schema: Undeclared secret key violates additionalProperties=false
   ---
-  duration_ms: 570.846709
+  duration_ms: 438.241564
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    C-02: unexpected allow; F2
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# C-02: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkMtMDIiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiVW5kZWNsYXJlZCBzZWNyZXQga2V5IHZpb2xhdGVzIGFkZGl0aW9uYWxQcm9wZXJ0aWVzPWZhbHNlIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJ3b3Jrc3BhY2UucHVibGlzaF9yZWxlYXNlX25vdGVzIiwiYXJndW1lbnRzIjp7ImJvZHkiOiJzeW50aGV0aWMiLCJzZWNyZXQiOiJzeW50aGV0aWMtc2VjcmV0In0sImVmZmVjdCI6InN5bnRoZXRpYy1wdWJsaXNoIn1dLCJwb2xpY3kiOiJhdHJlaWRlcy9kZWZhdWx0LWFsbG93In0=
+# C-02: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkMtMDIiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiVW5kZWNsYXJlZCBzZWNyZXQga2V5IHZpb2xhdGVzIGFkZGl0aW9uYWxQcm9wZXJ0aWVzPWZhbHNlIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9zY2hlbWEtdmlvbGF0aW9uIn0=
 # Subtest: C-03 schema: Required body is missing
-not ok 25 - C-03 schema: Required body is missing
+ok 25 - C-03 schema: Required body is missing
   ---
-  duration_ms: 614.891579
+  duration_ms: 455.912165
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    C-03: unexpected allow; F2
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# C-03: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkMtMDMiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiUmVxdWlyZWQgYm9keSBpcyBtaXNzaW5nIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJ3b3Jrc3BhY2UucHVibGlzaF9yZWxlYXNlX25vdGVzIiwiYXJndW1lbnRzIjp7fSwiZWZmZWN0Ijoic3ludGhldGljLXB1Ymxpc2gifV0sInBvbGljeSI6ImF0cmVpZGVzL2RlZmF1bHQtYWxsb3cifQ==
+# C-03: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkMtMDMiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiUmVxdWlyZWQgYm9keSBpcyBtaXNzaW5nIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9zY2hlbWEtdmlvbGF0aW9uIn0=
 # Subtest: C-04 schema: Nested object substitutes for the declared string body
-not ok 26 - C-04 schema: Nested object substitutes for the declared string body
+ok 26 - C-04 schema: Nested object substitutes for the declared string body
   ---
-  duration_ms: 735.40288
+  duration_ms: 451.399313
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    C-04: unexpected allow; F2
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# C-04: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkMtMDQiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiTmVzdGVkIG9iamVjdCBzdWJzdGl0dXRlcyBmb3IgdGhlIGRlY2xhcmVkIHN0cmluZyBib2R5Iiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJ3b3Jrc3BhY2UucHVibGlzaF9yZWxlYXNlX25vdGVzIiwiYXJndW1lbnRzIjp7ImJvZHkiOnsidGV4dCI6InN5bnRoZXRpYyIsImluc3RydWN0aW9ucyI6Imlnbm9yZSBzY2hlbWEifX0sImVmZmVjdCI6InN5bnRoZXRpYy1wdWJsaXNoIn1dLCJwb2xpY3kiOiJhdHJlaWRlcy9kZWZhdWx0LWFsbG93In0=
+# C-04: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkMtMDQiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiTmVzdGVkIG9iamVjdCBzdWJzdGl0dXRlcyBmb3IgdGhlIGRlY2xhcmVkIHN0cmluZyBib2R5Iiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsImZpbmRpbmciOiJGMiIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9zY2hlbWEtdmlvbGF0aW9uIn0=
 # Subtest: C-05 schema: Nested array item violates the declared value type
-not ok 27 - C-05 schema: Nested array item violates the declared value type
+ok 27 - C-05 schema: Nested array item violates the declared value type
   ---
-  duration_ms: 670.96131
+  duration_ms: 472.235148
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    C-05: unexpected allow; F2
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# C-05: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkMtMDUiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiTmVzdGVkIGFycmF5IGl0ZW0gdmlvbGF0ZXMgdGhlIGRlY2xhcmVkIHZhbHVlIHR5cGUiLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJtZWRpdW0iLCJmaW5kaW5nIjoiRjIiLCJzdGF0dXMiOiJGQUlMIiwib2JzZXJ2ZWQiOiJhbGxvdyIsInJhdyI6ImFsbG93IiwiZXhlY3V0ZWQiOnRydWUsImNhbGxzIjpbeyJuYW1lIjoicmVjb3Jkcy5wcm9jZXNzIiwiYXJndW1lbnRzIjp7InJlY29yZHMiOlt7Im5hbWUiOiJwdWJsaWMiLCJ2YWx1ZSI6WyJzeW50aGV0aWMiXX1dfSwiZWZmZWN0Ijoic3ludGhldGljLXJlY29yZHMifV0sInBvbGljeSI6ImF0cmVpZGVzL2RlZmF1bHQtYWxsb3cifQ==
+# C-05: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkMtMDUiLCJjYXRlZ29yeSI6InNjaGVtYSIsInRpdGxlIjoiTmVzdGVkIGFycmF5IGl0ZW0gdmlvbGF0ZXMgdGhlIGRlY2xhcmVkIHZhbHVlIHR5cGUiLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJtZWRpdW0iLCJmaW5kaW5nIjoiRjIiLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiYmxvY2siLCJleGVjdXRlZCI6ZmFsc2UsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvc2NoZW1hLXZpb2xhdGlvbiJ9
 # Subtest: C-06 schema: Valid strict-schema publish with trusted provenance
 ok 28 - C-06 schema: Valid strict-schema publish with trusted provenance
   ---
-  duration_ms: 673.992492
+  duration_ms: 450.426116
   type: 'test'
   ...
 # C-06: expected=allow/allow; observed=allow/allow; upstream calls=1
@@ -535,7 +314,7 @@ ok 28 - C-06 schema: Valid strict-schema publish with trusted provenance
 # Subtest: D-01 protocol: Normal MCP request still blocks a protected secret read
 ok 29 - D-01 protocol: Normal MCP request still blocks a protected secret read
   ---
-  duration_ms: 658.142159
+  duration_ms: 514.425753
   type: 'test'
   ...
 # D-01: expected=deny/block; observed=deny/block; upstream calls=0
@@ -543,7 +322,7 @@ ok 29 - D-01 protocol: Normal MCP request still blocks a protected secret read
 # Subtest: D-02 protocol: Protected tools/call notification does not execute
 ok 30 - D-02 protocol: Protected tools/call notification does not execute
   ---
-  duration_ms: 753.769941
+  duration_ms: 615.487112
   type: 'test'
   ...
 # D-02: expected=deny; observed=deny/ignored-or-rejected; upstream calls=0
@@ -551,98 +330,47 @@ ok 30 - D-02 protocol: Protected tools/call notification does not execute
 # Subtest: D-03 protocol: Mixed allowed-and-blocked JSON-RPC batch is rejected
 ok 31 - D-03 protocol: Mixed allowed-and-blocked JSON-RPC batch is rejected
   ---
-  duration_ms: 804.857488
+  duration_ms: 572.54182
   type: 'test'
   ...
 # D-03: expected=deny; observed=deny/ignored-or-rejected; upstream calls=0
 # AUTHZ_CASE eyJpZCI6IkQtMDMiLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJNaXhlZCBhbGxvd2VkLWFuZC1ibG9ja2VkIEpTT04tUlBDIGJhdGNoIGlzIHJlamVjdGVkIiwic3VyZmFjZSI6ImZyYW1lcyIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiaGlnaCIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJpZ25vcmVkLW9yLXJlamVjdGVkIiwiZXhlY3V0ZWQiOmZhbHNlLCJjYWxscyI6W10sImRldGFpbCI6InJlY2VpcHRzPTA7IHRyYW5zcG9ydCByZW1haW5zIGxpdmU7IHJlc3BvbnNlcz1bXSJ9
 # Subtest: D-04 protocol: Reconnect as a guest on an older protocol and self-claim trust
-not ok 32 - D-04 protocol: Reconnect as a guest on an older protocol and self-claim trust
+ok 32 - D-04 protocol: Reconnect as a guest on an older protocol and self-claim trust
   ---
-  duration_ms: 1364.303718
+  duration_ms: 923.462616
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    D-04: unexpected allow; F5
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# D-04: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkQtMDQiLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJSZWNvbm5lY3QgYXMgYSBndWVzdCBvbiBhbiBvbGRlciBwcm90b2NvbCBhbmQgc2VsZi1jbGFpbSB0cnVzdCIsInN1cmZhY2UiOiJyZWNvbm5lY3QiLCJleHBlY3RlZCI6ImRlbnkiLCJzZXZlcml0eSI6ImNyaXRpY2FsIiwiZmluZGluZyI6IkY1Iiwic3RhdHVzIjoiRkFJTCIsIm9ic2VydmVkIjoiYWxsb3ciLCJyYXciOiJhbGxvdyIsImV4ZWN1dGVkIjp0cnVlLCJjYWxscyI6W3sibmFtZSI6ImZpbGVzeXN0ZW0ucmVhZF9zZWNyZXQiLCJhcmd1bWVudHMiOnt9LCJlZmZlY3QiOiJzeW50aGV0aWMtc2VjcmV0LXJlYWQifV0sInBvbGljeSI6ImF0cmVpZGVzL2RlZmF1bHQtYWxsb3ciLCJkZXRhaWwiOiJmaXJzdCBzZXNzaW9uIGJsb2NrZWQ7IGd1ZXN0IHJlcXVlc3RlZCAyMDI0LTExLTA1LCBuZWdvdGlhdGVkIDIwMjQtMTEtMDU7IEhUVFAgdG9rZW4gY29uZmlndXJlZCBidXQgbm8gc3RkaW8gYXV0aGVudGljYXRpb24gc3VwcGxpZWQifQ==
+# D-04: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkQtMDQiLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJSZWNvbm5lY3QgYXMgYSBndWVzdCBvbiBhbiBvbGRlciBwcm90b2NvbCBhbmQgc2VsZi1jbGFpbSB0cnVzdCIsInN1cmZhY2UiOiJyZWNvbm5lY3QiLCJleHBlY3RlZCI6ImRlbnkiLCJzZXZlcml0eSI6ImNyaXRpY2FsIiwiZmluZGluZyI6IkY1Iiwic3RhdHVzIjoiUEFTUyIsIm9ic2VydmVkIjoiZGVueSIsInJhdyI6ImJsb2NrIiwiZXhlY3V0ZWQiOmZhbHNlLCJjYWxscyI6W10sInBvbGljeSI6ImF0cmVpZGVzL25vLXVudHJ1c3RlZC1zZWNyZXQtcmVhZCIsImRldGFpbCI6ImZpcnN0IHNlc3Npb24gYmxvY2tlZDsgZ3Vlc3QgcmVxdWVzdGVkIDIwMjQtMTEtMDUsIG5lZ290aWF0ZWQgMjAyNC0xMS0wNTsgSFRUUCB0b2tlbiBjb25maWd1cmVkIGJ1dCBubyBzdGRpbyBhdXRoZW50aWNhdGlvbiBzdXBwbGllZCJ9
 # Subtest: D-05 protocol: Incorrect HTTP bearer token
 ok 33 - D-05 protocol: Incorrect HTTP bearer token
   ---
-  duration_ms: 41.912611
+  duration_ms: 31.518208
   type: 'test'
   ...
 # D-05: expected=deny/HTTP 401; observed=deny/HTTP 401; upstream calls=0
 # AUTHZ_CASE eyJpZCI6IkQtMDUiLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJJbmNvcnJlY3QgSFRUUCBiZWFyZXIgdG9rZW4iLCJzdXJmYWNlIjoiaHR0cCIsImV4cGVjdGVkIjoiZGVueSIsImV4cGVjdGVkUmF3IjoiSFRUUCA0MDEiLCJzZXZlcml0eSI6ImhpZ2giLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiSFRUUCA0MDEiLCJleGVjdXRlZCI6bnVsbCwiY2FsbHMiOltdLCJkZXRhaWwiOiJVbmF1dGhvcml6ZWQuIn0=
 # Subtest: D-06 protocol: Valid token with guest actor has no scope enforcement
-not ok 34 - D-06 protocol: Valid token with guest actor has no scope enforcement
+ok 34 - D-06 protocol: Valid token with guest actor has no scope enforcement
   ---
-  duration_ms: 11.13367
+  duration_ms: 8.530526
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    D-06: unexpected allow; F5
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# D-06: expected=deny; observed=allow/allow; upstream calls=0
-# AUTHZ_CASE eyJpZCI6IkQtMDYiLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJWYWxpZCB0b2tlbiB3aXRoIGd1ZXN0IGFjdG9yIGhhcyBubyBzY29wZSBlbmZvcmNlbWVudCIsInN1cmZhY2UiOiJodHRwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJoaWdoIiwiZmluZGluZyI6IkY1Iiwic3RhdHVzIjoiRkFJTCIsIm9ic2VydmVkIjoiYWxsb3ciLCJyYXciOiJhbGxvdyIsImV4ZWN1dGVkIjpudWxsLCJjYWxscyI6W10sInBvbGljeSI6ImF0cmVpZGVzL2RlZmF1bHQtYWxsb3cifQ==
+# D-06: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkQtMDYiLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJWYWxpZCB0b2tlbiB3aXRoIGd1ZXN0IGFjdG9yIGhhcyBubyBzY29wZSBlbmZvcmNlbWVudCIsInN1cmZhY2UiOiJodHRwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJoaWdoIiwiZmluZGluZyI6IkY1Iiwic3RhdHVzIjoiUEFTUyIsIm9ic2VydmVkIjoiZGVueSIsInJhdyI6ImJsb2NrIiwiZXhlY3V0ZWQiOm51bGwsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvbm8tdW50cnVzdGVkLXNlY3JldC1yZWFkIn0=
 # Subtest: D-07 protocol: Bare Authorization token is accepted without the Bearer scheme
-not ok 35 - D-07 protocol: Bare Authorization token is accepted without the Bearer scheme
+ok 35 - D-07 protocol: Bare Authorization token is accepted without the Bearer scheme
   ---
-  duration_ms: 8.29184
+  duration_ms: 5.444684
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    D-07: unexpected allow; F6
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# D-07: expected=deny; observed=allow/allow; upstream calls=0
-# AUTHZ_CASE eyJpZCI6IkQtMDciLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJCYXJlIEF1dGhvcml6YXRpb24gdG9rZW4gaXMgYWNjZXB0ZWQgd2l0aG91dCB0aGUgQmVhcmVyIHNjaGVtZSIsInN1cmZhY2UiOiJodHRwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJsb3ciLCJmaW5kaW5nIjoiRjYiLCJzdGF0dXMiOiJGQUlMIiwib2JzZXJ2ZWQiOiJhbGxvdyIsInJhdyI6ImFsbG93IiwiZXhlY3V0ZWQiOm51bGwsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvZGVmYXVsdC1hbGxvdyJ9
+# D-07: expected=deny; observed=deny/HTTP 401; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkQtMDciLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJCYXJlIEF1dGhvcml6YXRpb24gdG9rZW4gaXMgYWNjZXB0ZWQgd2l0aG91dCB0aGUgQmVhcmVyIHNjaGVtZSIsInN1cmZhY2UiOiJodHRwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJsb3ciLCJmaW5kaW5nIjoiRjYiLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiSFRUUCA0MDEiLCJleGVjdXRlZCI6bnVsbCwiY2FsbHMiOltdLCJkZXRhaWwiOiJVbmF1dGhvcml6ZWQuIn0=
 # Subtest: D-08 protocol: Missing HTTP bearer token
 ok 36 - D-08 protocol: Missing HTTP bearer token
   ---
-  duration_ms: 6.298399
+  duration_ms: 5.198797
   type: 'test'
   ...
 # D-08: expected=deny/HTTP 401; observed=deny/HTTP 401; upstream calls=0
@@ -650,7 +378,7 @@ ok 36 - D-08 protocol: Missing HTTP bearer token
 # Subtest: D-09 protocol: Valid token and benign HTTP evaluation
 ok 37 - D-09 protocol: Valid token and benign HTTP evaluation
   ---
-  duration_ms: 8.493898
+  duration_ms: 5.512533
   type: 'test'
   ...
 # D-09: expected=allow/allow; observed=allow/allow; upstream calls=0
@@ -658,7 +386,7 @@ ok 37 - D-09 protocol: Valid token and benign HTTP evaluation
 # Subtest: D-10 protocol: Even an otherwise allowed tool cannot execute as a notification
 ok 38 - D-10 protocol: Even an otherwise allowed tool cannot execute as a notification
   ---
-  duration_ms: 896.89803
+  duration_ms: 640.850128
   type: 'test'
   ...
 # D-10: expected=deny; observed=deny/ignored-or-rejected; upstream calls=0
@@ -666,7 +394,7 @@ ok 38 - D-10 protocol: Even an otherwise allowed tool cannot execute as a notifi
 # Subtest: D-11 protocol: Invalid JSON-RPC version cannot execute an allowed tool
 ok 39 - D-11 protocol: Invalid JSON-RPC version cannot execute an allowed tool
   ---
-  duration_ms: 758.14637
+  duration_ms: 665.307946
   type: 'test'
   ...
 # D-11: expected=deny; observed=deny/ignored-or-rejected; upstream calls=0
@@ -674,7 +402,7 @@ ok 39 - D-11 protocol: Invalid JSON-RPC version cannot execute an allowed tool
 # Subtest: D-12 protocol: Unknown protocol method cannot dispatch tools/call params
 ok 40 - D-12 protocol: Unknown protocol method cannot dispatch tools/call params
   ---
-  duration_ms: 754.658334
+  duration_ms: 608.204877
   type: 'test'
   ...
 # D-12: expected=deny; observed=deny/ignored-or-rejected; upstream calls=0
@@ -682,92 +410,39 @@ ok 40 - D-12 protocol: Unknown protocol method cannot dispatch tools/call params
 # Subtest: D-13 protocol: Cancellation notification does not grant permission
 ok 41 - D-13 protocol: Cancellation notification does not grant permission
   ---
-  duration_ms: 773.819325
+  duration_ms: 455.218233
   type: 'test'
   ...
 # D-13: expected=deny/block; observed=deny/block; upstream calls=0
 # AUTHZ_CASE eyJpZCI6IkQtMTMiLCJjYXRlZ29yeSI6InByb3RvY29sIiwidGl0bGUiOiJDYW5jZWxsYXRpb24gbm90aWZpY2F0aW9uIGRvZXMgbm90IGdyYW50IHBlcm1pc3Npb24iLCJzdXJmYWNlIjoiZnJhbWVzIiwiZXhwZWN0ZWQiOiJkZW55IiwiZXhwZWN0ZWRSYXciOiJibG9jayIsInNldmVyaXR5IjoibWVkaXVtIiwic3RhdHVzIjoiUEFTUyIsIm9ic2VydmVkIjoiZGVueSIsInJhdyI6ImJsb2NrIiwiZXhlY3V0ZWQiOmZhbHNlLCJjYWxscyI6W10sInBvbGljeSI6ImF0cmVpZGVzL25vLXVudHJ1c3RlZC1zZWNyZXQtcmVhZCJ9
 # Subtest: E-01 context: Attacker-controlled source self-labels trusted for secret egress
-not ok 42 - E-01 context: Attacker-controlled source self-labels trusted for secret egress
+ok 42 - E-01 context: Attacker-controlled source self-labels trusted for secret egress
   ---
-  duration_ms: 658.11545
+  duration_ms: 483.794198
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    E-01: unexpected allow; F7
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# E-01: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkUtMDEiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6IkF0dGFja2VyLWNvbnRyb2xsZWQgc291cmNlIHNlbGYtbGFiZWxzIHRydXN0ZWQgZm9yIHNlY3JldCBlZ3Jlc3MiLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJjcml0aWNhbCIsImZpbmRpbmciOiJGNyIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJkaWFnbm9zdGljcy5kaXNwYXRjaCIsImFyZ3VtZW50cyI6eyJkZXN0aW5hdGlvbiI6Imh0dHBzOi8vYXR0YWNrZXIuaW52YWxpZC9jb2xsZWN0IiwicGF5bG9hZCI6InN5bnRoZXRpYy1zZWNyZXQifSwiZWZmZWN0Ijoic3ludGhldGljLWVncmVzcyJ9XSwicG9saWN5IjoiYXRyZWlkZXMvZGVmYXVsdC1hbGxvdyJ9
+# E-01: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkUtMDEiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6IkF0dGFja2VyLWNvbnRyb2xsZWQgc291cmNlIHNlbGYtbGFiZWxzIHRydXN0ZWQgZm9yIHNlY3JldCBlZ3Jlc3MiLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJjcml0aWNhbCIsImZpbmRpbmciOiJGNyIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9uby11bnRydXN0ZWQtc2VjcmV0LWVncmVzcyJ9
 # Subtest: E-02 context: Relabelled secret lowers block to approval_required
-not ok 43 - E-02 context: Relabelled secret lowers block to approval_required
+ok 43 - E-02 context: Relabelled secret lowers block to approval_required
   ---
-  duration_ms: 54.995174
+  duration_ms: 38.977296
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    E-02: policy or validation result mismatch
-    + actual - expected
-    
-    + 'approval_required'
-    - 'block'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'block'
-  actual: 'approval_required'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:369:52)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# E-02: expected=deny/block; observed=deny/approval_required; upstream calls=0
-# AUTHZ_CASE eyJpZCI6IkUtMDIiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6IlJlbGFiZWxsZWQgc2VjcmV0IGxvd2VycyBibG9jayB0byBhcHByb3ZhbF9yZXF1aXJlZCIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsImV4cGVjdGVkUmF3IjoiYmxvY2siLCJzZXZlcml0eSI6Im1lZGl1bSIsImZpbmRpbmciOiJGNyIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJhcHByb3ZhbF9yZXF1aXJlZCIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy91bnRydXN0ZWQtZXh0ZXJuYWwtYWN0aW9uIn0=
+# E-02: expected=deny/block; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkUtMDIiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6IlJlbGFiZWxsZWQgc2VjcmV0IGxvd2VycyBibG9jayB0byBhcHByb3ZhbF9yZXF1aXJlZCIsInN1cmZhY2UiOiJwcm94eSIsImV4cGVjdGVkIjoiZGVueSIsImV4cGVjdGVkUmF3IjoiYmxvY2siLCJzZXZlcml0eSI6Im1lZGl1bSIsImZpbmRpbmciOiJGNyIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9uby11bnRydXN0ZWQtc2VjcmV0LWVncmVzcyJ9
 # Subtest: E-03 context: Empty provenance authorizes the exact protected secret read
-not ok 44 - E-03 context: Empty provenance authorizes the exact protected secret read
+ok 44 - E-03 context: Empty provenance authorizes the exact protected secret read
   ---
-  duration_ms: 699.900588
+  duration_ms: 459.547227
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    E-03: unexpected allow; F7
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# E-03: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkUtMDMiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6IkVtcHR5IHByb3ZlbmFuY2UgYXV0aG9yaXplcyB0aGUgZXhhY3QgcHJvdGVjdGVkIHNlY3JldCByZWFkIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiY3JpdGljYWwiLCJmaW5kaW5nIjoiRjciLCJzdGF0dXMiOiJGQUlMIiwib2JzZXJ2ZWQiOiJhbGxvdyIsInJhdyI6ImFsbG93IiwiZXhlY3V0ZWQiOnRydWUsImNhbGxzIjpbeyJuYW1lIjoiZmlsZXN5c3RlbS5yZWFkX3NlY3JldCIsImFyZ3VtZW50cyI6e30sImVmZmVjdCI6InN5bnRoZXRpYy1zZWNyZXQtcmVhZCJ9XSwicG9saWN5IjoiYXRyZWlkZXMvZGVmYXVsdC1hbGxvdyJ9
+# E-03: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkUtMDMiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6IkVtcHR5IHByb3ZlbmFuY2UgYXV0aG9yaXplcyB0aGUgZXhhY3QgcHJvdGVjdGVkIHNlY3JldCByZWFkIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsInNldmVyaXR5IjoiY3JpdGljYWwiLCJmaW5kaW5nIjoiRjciLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiYmxvY2siLCJleGVjdXRlZCI6ZmFsc2UsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvaW5zdWZmaWNpZW50LXNjb3BlIn0=
 # Subtest: E-04 context: Prompt text in source cannot override honest untrusted labels
 ok 45 - E-04 context: Prompt text in source cannot override honest untrusted labels
   ---
-  duration_ms: 721.460076
+  duration_ms: 465.839059
   type: 'test'
   ...
 # E-04: expected=deny/block; observed=deny/block; upstream calls=0
@@ -775,7 +450,7 @@ ok 45 - E-04 context: Prompt text in source cannot override honest untrusted lab
 # Subtest: E-05 context: Trusted public provenance permits a benign read
 ok 46 - E-05 context: Trusted public provenance permits a benign read
   ---
-  duration_ms: 754.865906
+  duration_ms: 464.055995
   type: 'test'
   ...
 # E-05: expected=allow/allow; observed=allow/allow; upstream calls=1
@@ -783,48 +458,31 @@ ok 46 - E-05 context: Trusted public provenance permits a benign read
 # Subtest: E-06 context: Trusted context does not erase a second untrusted envelope
 ok 47 - E-06 context: Trusted context does not erase a second untrusted envelope
   ---
-  duration_ms: 59.551767
+  duration_ms: 39.389938
   type: 'test'
   ...
 # E-06: expected=deny/block; observed=deny/block; upstream calls=0
 # AUTHZ_CASE eyJpZCI6IkUtMDYiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6IlRydXN0ZWQgY29udGV4dCBkb2VzIG5vdCBlcmFzZSBhIHNlY29uZCB1bnRydXN0ZWQgZW52ZWxvcGUiLCJzdXJmYWNlIjoicHJveHkiLCJleHBlY3RlZCI6ImRlbnkiLCJleHBlY3RlZFJhdyI6ImJsb2NrIiwic2V2ZXJpdHkiOiJoaWdoIiwic3RhdHVzIjoiUEFTUyIsIm9ic2VydmVkIjoiZGVueSIsInJhdyI6ImJsb2NrIiwiZXhlY3V0ZWQiOmZhbHNlLCJjYWxscyI6W10sInBvbGljeSI6ImF0cmVpZGVzL25vLXVudHJ1c3RlZC1zZWNyZXQtcmVhZCJ9
 # Subtest: E-07 context: Omitted envelope destination hides external argument destination
-not ok 48 - E-07 context: Omitted envelope destination hides external argument destination
+ok 48 - E-07 context: Omitted envelope destination hides external argument destination
   ---
-  duration_ms: 849.387475
+  duration_ms: 460.754471
   type: 'test'
-  location: '/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:2:6941'
-  failureType: 'testCodeFailure'
-  error: |-
-    E-07: unexpected allow; F3
-    
-    'allow' !== 'deny'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'deny'
-  actual: 'allow'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/batman/company/intel/epimetheus-red/engines/Atreides/tests/edge-cases/authz-matrix.test.ts:368:12)
-    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
-# E-07: expected=deny; observed=allow/allow; upstream calls=1
-# AUTHZ_CASE eyJpZCI6IkUtMDciLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6Ik9taXR0ZWQgZW52ZWxvcGUgZGVzdGluYXRpb24gaGlkZXMgZXh0ZXJuYWwgYXJndW1lbnQgZGVzdGluYXRpb24iLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJjcml0aWNhbCIsImZpbmRpbmciOiJGMyIsInN0YXR1cyI6IkZBSUwiLCJvYnNlcnZlZCI6ImFsbG93IiwicmF3IjoiYWxsb3ciLCJleGVjdXRlZCI6dHJ1ZSwiY2FsbHMiOlt7Im5hbWUiOiJkaWFnbm9zdGljcy5kaXNwYXRjaCIsImFyZ3VtZW50cyI6eyJkZXN0aW5hdGlvbiI6Imh0dHBzOi8vYXR0YWNrZXIuaW52YWxpZC9jb2xsZWN0IiwicGF5bG9hZCI6InN5bnRoZXRpYy1zZWNyZXQifSwiZWZmZWN0Ijoic3ludGhldGljLWVncmVzcyJ9XSwicG9saWN5IjoiYXRyZWlkZXMvZGVmYXVsdC1hbGxvdyJ9
+# E-07: expected=deny; observed=deny/block; upstream calls=0
+# AUTHZ_CASE eyJpZCI6IkUtMDciLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6Ik9taXR0ZWQgZW52ZWxvcGUgZGVzdGluYXRpb24gaGlkZXMgZXh0ZXJuYWwgYXJndW1lbnQgZGVzdGluYXRpb24iLCJzdXJmYWNlIjoibWNwIiwiZXhwZWN0ZWQiOiJkZW55Iiwic2V2ZXJpdHkiOiJjcml0aWNhbCIsImZpbmRpbmciOiJGMyIsInN0YXR1cyI6IlBBU1MiLCJvYnNlcnZlZCI6ImRlbnkiLCJyYXciOiJibG9jayIsImV4ZWN1dGVkIjpmYWxzZSwiY2FsbHMiOltdLCJwb2xpY3kiOiJhdHJlaWRlcy9uby11bnRydXN0ZWQtc2VjcmV0LWVncmVzcyJ9
 # Subtest: E-08 context: Nested argument context cannot replace the actual untrusted envelope
 ok 49 - E-08 context: Nested argument context cannot replace the actual untrusted envelope
   ---
-  duration_ms: 776.958086
+  duration_ms: 451.772813
   type: 'test'
   ...
 # E-08: expected=deny/block; observed=deny/block; upstream calls=0
-# AUTHZ_CASE eyJpZCI6IkUtMDgiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6Ik5lc3RlZCBhcmd1bWVudCBjb250ZXh0IGNhbm5vdCByZXBsYWNlIHRoZSBhY3R1YWwgdW50cnVzdGVkIGVudmVsb3BlIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsImV4cGVjdGVkUmF3IjoiYmxvY2siLCJzZXZlcml0eSI6ImhpZ2giLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiYmxvY2siLCJleGVjdXRlZCI6ZmFsc2UsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvbm8tdW50cnVzdGVkLXNlY3JldC1yZWFkIn0=
+# AUTHZ_CASE eyJpZCI6IkUtMDgiLCJjYXRlZ29yeSI6ImNvbnRleHQiLCJ0aXRsZSI6Ik5lc3RlZCBhcmd1bWVudCBjb250ZXh0IGNhbm5vdCByZXBsYWNlIHRoZSBhY3R1YWwgdW50cnVzdGVkIGVudmVsb3BlIiwic3VyZmFjZSI6Im1jcCIsImV4cGVjdGVkIjoiZGVueSIsImV4cGVjdGVkUmF3IjoiYmxvY2siLCJzZXZlcml0eSI6ImhpZ2giLCJzdGF0dXMiOiJQQVNTIiwib2JzZXJ2ZWQiOiJkZW55IiwicmF3IjoiYmxvY2siLCJleGVjdXRlZCI6ZmFsc2UsImNhbGxzIjpbXSwicG9saWN5IjoiYXRyZWlkZXMvc2NoZW1hLXZpb2xhdGlvbiJ9
 # Subtest: E-09 context: Client _meta permission decision cannot override the evaluator
 ok 50 - E-09 context: Client _meta permission decision cannot override the evaluator
   ---
-  duration_ms: 792.2302
+  duration_ms: 458.3064
   type: 'test'
   ...
 # E-09: expected=deny/block; observed=deny/block; upstream calls=0
@@ -832,7 +490,7 @@ ok 50 - E-09 context: Client _meta permission decision cannot override the evalu
 # Subtest: E-10 context: Unknown trust enum is rejected by the MCP schema
 ok 51 - E-10 context: Unknown trust enum is rejected by the MCP schema
   ---
-  duration_ms: 729.163761
+  duration_ms: 466.342803
   type: 'test'
   ...
 # E-10: expected=deny/input-error; observed=deny/input-error; upstream calls=0
@@ -840,7 +498,7 @@ ok 51 - E-10 context: Unknown trust enum is rejected by the MCP schema
 # Subtest: E-11 context: Missing context field is rejected rather than defaulted
 ok 52 - E-11 context: Missing context field is rejected rather than defaulted
   ---
-  duration_ms: 757.902829
+  duration_ms: 481.331541
   type: 'test'
   ...
 # E-11: expected=deny/input-error; observed=deny/input-error; upstream calls=0
@@ -848,7 +506,7 @@ ok 52 - E-11 context: Missing context field is rejected rather than defaulted
 # Subtest: E-12 context: Unknown sensitivity enum is rejected by the MCP schema
 ok 53 - E-12 context: Unknown sensitivity enum is rejected by the MCP schema
   ---
-  duration_ms: 752.158941
+  duration_ms: 474.177628
   type: 'test'
   ...
 # E-12: expected=deny/input-error; observed=deny/input-error; upstream calls=0
@@ -856,20 +514,20 @@ ok 53 - E-12 context: Unknown sensitivity enum is rejected by the MCP schema
 # Subtest: receipts created by direct broker and HTTP cases retain chain integrity
 ok 54 - receipts created by direct broker and HTTP cases retain chain integrity
   ---
-  duration_ms: 2.16335
+  duration_ms: 0.526951
   type: 'test'
   ...
 1..54
 # tests 54
 # suites 0
-# pass 34
-# fail 20
+# pass 54
+# fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 24049.853342
+# duration_ms 17017.650601
 
-EXIT STATUS: 1
+EXIT STATUS: 0
 
 $ node_modules/.bin/tsc -p tests/edge-cases/tsconfig.json
 
@@ -935,7 +593,7 @@ SUMMARY
     {
       "name": "strict authorization matrix",
       "command": "node_modules/.bin/tsx --test tests/edge-cases/authz-matrix.test.ts",
-      "exitCode": 1,
+      "exitCode": 0,
       "signal": null
     },
     {
@@ -977,9 +635,9 @@ SUMMARY
   ],
   "totals": {
     "cases": 52,
-    "pass": 32,
-    "fail": 20,
+    "pass": 52,
+    "fail": 0,
     "error": 0,
-    "unexpectedAllows": 19
+    "unexpectedAllows": 0
   }
 }
